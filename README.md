@@ -1,59 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Personal Portfolio & Blog CMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Personal Portfolio and Blog Management System built with **Laravel 12**. This application provides a dynamic platform to showcase professional skills, projects, experiences, and education, alongside a fully functional blog and contact system. It includes a robust Admin Dashboard for managing all content.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Public Interface
+- **Home Page**: Dynamic landing page displaying portfolio highlights.
+- **Blog**: A clean blog section with individual post views (`/blog`, `/blog/{slug}`).
+- **Contact Form**: Functional contact form for visitors to get in touch.
+- **Authentication**: Secure login system for administrators.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Dashboard
+Access a powerful backend to manage your portfolio content:
+- **Dashboard**: Overview of site statistics.
+- **Profile Management**: Update personal details and bio.
+- **Skills**: Manage technical skills with proficiency levels.
+- **Projects**: Showcase portfolio projects with descriptions and links.
+- **Experience**: Manage professional work history.
+- **Education**: Manage educational background.
+- **Blog Posts**: Create, edit, and delete blog posts.
+- **Categories**: Organize blog posts into categories.
+- **Social Links**: Manage social media profiles and links.
+- **Contacts**: View and manage incoming contact form messages.
+- **Settings**: Global site configuration (Restricted to Super Admin/Admin roles).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠 Tech Stack
 
-## Learning Laravel
+- **Framework**: [Laravel 12.x](https://laravel.com)
+- **Language**: PHP ^8.2
+- **Frontend**: Blade Templates, JavaScript, CSS
+- **Database**: MySQL / SQLite (Configurable)
+- **Testing**: [Pest PHP](https://pestphp.com)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ⚙️ Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Follow these steps to set up the project locally:
 
-## Laravel Sponsors
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/amanprojects-ops/amanbhai_portfolio.git
+   cd amanbhai_portfolio
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-### Premium Partners
+3. **Environment Configuration**
+   Copy the example environment file and configure your database settings:
+   ```bash
+   cp .env.example .env
+   ```
+   Update `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in the `.env` file.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **Generate Application Key**
+   ```bash
+   php artisan key:generate
+   ```
 
-## Contributing
+5. **Run Migrations**
+   Set up the database tables:
+   ```bash
+   php artisan migrate
+   ```
+   *(Optional) Seed the database if seeders are available:*
+   ```bash
+   php artisan db:seed
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Build Frontend Assets**
+   ```bash
+   npm run build
+   ```
+   *For development with hot-reloading:*
+   ```bash
+   npm run dev
+   ```
 
-## Code of Conduct
+7. **Start the Development Server**
+   ```bash
+   php artisan serve
+   ```
+   Visit `http://localhost:8000` in your browser.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📂 Project Structure
 
-## Security Vulnerabilities
+- **Routes**
+  - `routes/web.php`: Public routes (Home, Blog, Auth).
+  - `routes/admin.php`: Admin dashboard routes (Protected by auth middleware).
+  
+- **Database**
+  - `database/migrations`: Schema definitions for all content types (Skills, Projects, Posts, etc.).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Views**
+  - `resources/views/admin`: Admin panel templates.
+  - `resources/views/blog`: Public blog templates.
+  - `resources/views/layouts`: Master layout files.
 
-## License
+## 🧪 Running Tests
+
+This project uses **Pest** for testing. Run the test suite with:
+
+```bash
+php artisan test
+```
+
+## 🔒 Security
+
+- **Role-Based Access Control (RBAC)**: Certain actions (like Settings management) are restricted to specific roles (e.g., `super-admin`, `admin`).
+- **CSRF Protection**: All forms are protected against Cross-Site Request Forgery.
+- **Authentication**: Built-in Laravel authentication system.
+
+## 📄 License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Created by Technical Aman — [www.amanprojects.com](https://amanprojects.com)
