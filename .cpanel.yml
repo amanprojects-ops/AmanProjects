@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/amanprojects/public_html/amanbhai_portfolio
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -af . $DEPLOYPATH
