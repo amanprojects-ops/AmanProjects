@@ -14,15 +14,18 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
-            $table->string('tech_stack_tags');
+            $table->text('description')->nullable();
+            $table->string('tech_stack_tags')->nullable();
             $table->string('github_link')->nullable();
             $table->string('live_demo_link')->nullable();
             $table->string('thumbnail_image')->nullable();
-            $table->boolean('featured')->default(false);
-            $table->enum('status', ['draft', 'published'])->default('draft');
+            $table->boolean('featured')->default(false)->index();
+            $table->enum('status', ['draft', 'published'])->default('draft')->index();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['status', 'created_at']);
+            $table->index('featured');
         });
     }
 

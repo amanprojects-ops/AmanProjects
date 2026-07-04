@@ -15,15 +15,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->index();
             $table->text('content');
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
             $table->string('featured_image')->nullable();
-            $table->enum('status', ['draft', 'published'])->default('draft');
-            $table->timestamp('published_at')->nullable();
+            $table->enum('status', ['draft', 'published'])->default('draft')->index();
+            $table->timestamp('published_at')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['status', 'published_at']);
+            $table->index('user_id');
+            $table->index(['status', 'created_at']);
         });
     }
 

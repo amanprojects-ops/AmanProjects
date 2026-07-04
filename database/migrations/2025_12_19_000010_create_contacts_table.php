@@ -17,8 +17,13 @@ return new class extends Migration
             $table->string('email');
             $table->string('subject');
             $table->text('message');
-            $table->boolean('read')->default(false);
+            $table->boolean('read')->default(false)->index();
+            $table->timestamp('replied_at')->nullable();
             $table->timestamps();
+
+            $table->index('read');
+            $table->index(['read', 'created_at']);
+            $table->index('email');
         });
     }
 

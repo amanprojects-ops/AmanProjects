@@ -14,10 +14,15 @@ return new class extends Migration
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('category');
+            $table->string('category')->nullable()->index();
             $table->integer('level');
-            $table->boolean('show')->default(true);
+            $table->boolean('show')->default(true)->index();
             $table->timestamps();
+
+            $table->index('show');
+            $table->index('category');
+            $table->index(['show', 'created_at']);
+            $table->index('level');
         });
     }
 
