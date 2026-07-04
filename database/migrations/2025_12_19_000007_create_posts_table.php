@@ -24,10 +24,6 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['status', 'published_at']);
-            $table->index('user_id');
-            $table->index(['status', 'created_at']);
         });
     }
 

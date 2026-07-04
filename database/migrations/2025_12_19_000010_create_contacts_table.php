@@ -21,9 +21,6 @@ return new class extends Migration
             $table->timestamp('replied_at')->nullable();
             $table->timestamps();
 
-            $table->index('read');
-            $table->index(['read', 'created_at']);
-            $table->index('email');
         });
     }
 

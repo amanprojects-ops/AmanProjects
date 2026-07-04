@@ -18,11 +18,6 @@ return new class extends Migration
             $table->integer('level');
             $table->boolean('show')->default(true)->index();
             $table->timestamps();
-
-            $table->index('show');
-            $table->index('category');
-            $table->index(['show', 'created_at']);
-            $table->index('level');
         });
     }
 

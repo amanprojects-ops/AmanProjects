@@ -6,7 +6,7 @@ RewriteCond %{REQUEST_FILENAME} deleteme\.\w+\.php
 RewriteRule (.*) - [L]
 
 # Serve static assets directly from public
-RewriteCond %{REQUEST_URI} \.(jpg|jpeg|gif|png|ico|css|js|eot|svg|ttf|woff|woff2|xml|ico)$ [NC]
+RewriteCond %{REQUEST_URI} \.(jpg|jpeg|gif|png|ico|css|js|eot|svg|ttf|woff|woff2|xml|txt)$ [NC]
 RewriteRule ^(.*)$ public/$1 [L]
 
 # Send all other requests to index.php
