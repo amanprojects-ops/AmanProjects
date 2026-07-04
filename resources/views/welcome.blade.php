@@ -1,12 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'AmanProjects — Custom Software, SaaS & Security Solutions | Bihar, India')
-@section('meta_description', 'AmanProjects builds premium custom software, SaaS platforms, and cybersecurity solutions. Trusted by clients across India. Web Development, API Integration & more.')
-@section('meta_keywords', 'software company bihar, custom software india, saas development, laravel developer, ethical hacking, web development bihar, amanprojects')
+@section('title', $data->settings['site_title'] ?? 'AmanProjects — Custom Software, SaaS & Security Solutions | Bihar, India')
+@section('meta_description', $data->settings['meta_description'] ?? 'AmanProjects builds premium custom software, SaaS platforms, and cybersecurity solutions. Trusted by clients across India. Web Development, API Integration & more.')
+@section('meta_keywords', $data->settings['meta_keywords'] ?? 'software company bihar, custom software india, saas development, laravel developer, ethical hacking, web development bihar, amanprojects')
 @section('use_tailwind', true)
 
 @section('content')
-
+@php
+    $siteName = $data->settings['site_name'] ?? 'AmanProjects';
+    $firstWord = 'Aman';
+    $secondWord = 'Projects';
+    if (preg_match('/^([A-Z][a-z]+)([A-Z].*)$/', $siteName, $matches)) {
+        $firstWord = $matches[1];
+        $secondWord = $matches[2];
+    } elseif (str_contains($siteName, ' ')) {
+        $parts = explode(' ', $siteName, 2);
+        $firstWord = $parts[0];
+        $secondWord = $parts[1];
+    } else {
+        $firstWord = $siteName;
+        $secondWord = '';
+    }
+    
+    $cleanPhone = preg_replace('/[^0-9]/', '', $data->profile?->phone ?? '919876543210');
+@endphp
 {{-- ======================================================
      TOP BAR
 ====================================================== --}}
@@ -14,21 +31,25 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between text-sm text-slate-400">
         <div class="flex items-center gap-2">
             <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            <span>Bihar, India &mdash; Building Digital Excellence</span>
+            <span>{{ $data->profile?->location ?? 'Bihar, India' }}</span>
         </div>
         <div class="flex items-center gap-6">
-            <a href="tel:+919876543210" class="flex items-center gap-2 hover:text-cyan-400 transition-colors">
+            @if($data->profile?->phone)
+            <a href="tel:{{ $data->profile->phone }}" class="flex items-center gap-2 hover:text-cyan-400 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                +91-98765-43210
+                {{ $data->profile->phone }}
             </a>
-            <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-green-500/10 border border-green-500/30 text-green-400 px-3 py-1 rounded-full hover:bg-green-500/20 transition-all">
+            <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-green-500/10 border border-green-500/30 text-green-400 px-3 py-1 rounded-full hover:bg-green-500/20 transition-all">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 WhatsApp
             </a>
-            <a href="mailto:hello@amanprojects.in" class="flex items-center gap-2 hover:text-cyan-400 transition-colors">
+            @endif
+            @if($data->user?->email)
+            <a href="mailto:{{ $data->user->email }}" class="flex items-center gap-2 hover:text-cyan-400 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 Contact Us
             </a>
+            @endif
         </div>
     </div>
 </div>
@@ -47,27 +68,57 @@
         <div class="flex items-center justify-between h-16">
 
             {{-- LOGO --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-2 group" aria-label="AmanProjects Home">
+            <a href="{{ route('home') }}" class="flex items-center gap-2 group" aria-label="{{ $siteName }} Home">
                 <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-all">
                     <span class="text-white font-grotesk font-bold text-sm">AP</span>
                 </div>
-                <span class="font-grotesk font-bold text-xl text-white">Aman<span class="text-cyan-400">Projects</span><span class="text-cyan-500 ml-0.5">.</span></span>
+                <span class="font-grotesk font-bold text-xl text-white">{{ $firstWord }}<span class="text-cyan-400">{{ $secondWord }}</span><span class="text-cyan-500 ml-0.5">.</span></span>
             </a>
 
             {{-- DESKTOP NAV --}}
             <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
-                @foreach([
-                    ['#home', 'Home'],
-                    ['#services', 'Services'],
-                    ['#products', 'Products'],
-                    ['#codebb', 'CodeBB'],
-                    ['#pricing', 'Pricing'],
-                ] as [$href, $label])
-                    <a href="{{ $href }}" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
-                        {{ $label }}
+                <a href="#home" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                    Home
+                    <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                </a>
+                <a href="#services" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                    Services
+                    <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                </a>
+                @if(isset($data->settings['projects_enabled']) && $data->settings['projects_enabled'] && isset($data->projects) && $data->projects->isNotEmpty())
+                    <a href="#products" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                        Products
                         <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
                     </a>
-                @endforeach
+                @endif
+                @if(isset($data->settings['skills_enabled']) && $data->settings['skills_enabled'] && isset($data->skills) && $data->skills->isNotEmpty())
+                    <a href="#skills" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                        Skills
+                        <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                    </a>
+                @endif
+                @if(isset($data->settings['experience_enabled']) && $data->settings['experience_enabled'] && isset($data->experiences) && $data->experiences->isNotEmpty())
+                    <a href="#experience" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                        Experience
+                        <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                    </a>
+                @endif
+                @if(isset($data->settings['education_enabled']) && $data->settings['education_enabled'] && isset($data->educations) && $data->educations->isNotEmpty())
+                    <a href="#education" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                        Education
+                        <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                    </a>
+                @endif
+                <a href="#pricing" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                    Pricing
+                    <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                </a>
+                @if(isset($data->settings['blog_enabled']) && $data->settings['blog_enabled'] && isset($data->posts) && $data->posts->isNotEmpty())
+                    <a href="#codebb" class="px-4 py-2 text-slate-400 hover:text-cyan-400 text-sm font-medium rounded-lg hover:bg-cyan-500/5 transition-all duration-200 relative group">
+                        CodeBB
+                        <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-4"></span>
+                    </a>
+                @endif
                 <a href="#contact" class="ml-4 px-5 py-2 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-lg btn-glow hover:scale-105 transition-all">
                     Get a Quote
                 </a>
@@ -93,31 +144,41 @@
             x-cloak
         >
             <div class="flex flex-col gap-1 pt-2 px-2">
-                @foreach([
-                    ['#home', 'Home'],
-                    ['#services', 'Services'],
-                    ['#products', 'Products'],
-                    ['#codebb', 'CodeBB'],
-                    ['#pricing', 'Pricing'],
-                ] as [$href, $label])
-                    <a href="{{ $href }}" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">{{ $label }}</a>
-                @endforeach
+                <a href="#home" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Home</a>
+                <a href="#services" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Services</a>
+                @if(isset($data->settings['projects_enabled']) && $data->settings['projects_enabled'] && isset($data->projects) && $data->projects->isNotEmpty())
+                <a href="#products" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Products</a>
+                @endif
+                @if(isset($data->settings['skills_enabled']) && $data->settings['skills_enabled'] && isset($data->skills) && $data->skills->isNotEmpty())
+                <a href="#skills" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Skills</a>
+                @endif
+                @if(isset($data->settings['experience_enabled']) && $data->settings['experience_enabled'] && isset($data->experiences) && $data->experiences->isNotEmpty())
+                <a href="#experience" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Experience</a>
+                @endif
+                @if(isset($data->settings['education_enabled']) && $data->settings['education_enabled'] && isset($data->educations) && $data->educations->isNotEmpty())
+                <a href="#education" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Education</a>
+                @endif
+                <a href="#pricing" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">Pricing</a>
+                @if(isset($data->settings['blog_enabled']) && $data->settings['blog_enabled'] && isset($data->posts) && $data->posts->isNotEmpty())
+                <a href="#codebb" @click="open = false" class="px-4 py-3 text-slate-300 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all text-sm font-medium">CodeBB</a>
+                @endif
                 <a href="#contact" @click="open = false" class="mt-2 mx-2 px-5 py-3 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-lg text-center btn-glow">Get a Quote</a>
                 {{-- Mobile contact strip --}}
                 <div class="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-cyan-500/10">
-                    <a href="tel:+919876543210" class="text-xs text-slate-400 hover:text-cyan-400 flex items-center gap-1">
+                    @if($data->profile?->phone)
+                    <a href="tel:{{ $data->profile->phone }}" class="text-xs text-slate-400 hover:text-cyan-400 flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                        +91-98765-43210
+                        {{ $data->profile->phone }}
                     </a>
-                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="text-xs text-green-400 flex items-center gap-1">
+                    <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-xs text-green-400 flex items-center gap-1">
                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         WhatsApp
                     </a>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-</header>
 
 {{-- ======================================================
      ========= HERO SECTION =========
@@ -137,7 +198,7 @@
             {{-- Badge --}}
             <div class="inline-flex self-start items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium" data-aos="fade-right" data-aos-delay="100">
                 <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                Trusted Software Partner from Bihar, India
+                Trusted Software Partner from {{ $data->profile?->location ?? 'Bihar, India' }}
             </div>
 
             {{-- Headline --}}
@@ -151,7 +212,7 @@
 
             {{-- Subtext --}}
             <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-lg" data-aos="fade-up" data-aos-delay="300">
-                Custom Software, SaaS Products &amp; Security Solutions from <span class="text-cyan-400 font-semibold">Bihar, India.</span> We turn your ideas into powerful digital products that drive real business results.
+                Custom Software, SaaS Products &amp; Security Solutions from <span class="text-cyan-400 font-semibold">{{ $data->profile?->location ?? 'Bihar, India' }}.</span> We turn your ideas into powerful digital products that drive real business results.
             </p>
 
             {{-- CTA Buttons --}}
@@ -196,38 +257,63 @@
                     <div class="swiper-wrapper">
 
                         @php
-                        $heroProjects = [
-                            [
-                                'name'  => 'AP Coaching',
-                                'desc'  => 'Coaching Centre Management SaaS',
-                                'color' => 'from-cyan-600 to-blue-700',
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
-                            ],
-                            [
-                                'name'  => 'AP Library',
-                                'desc'  => 'Library Seat Booking Platform',
-                                'color' => 'from-purple-600 to-indigo-700',
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
-                            ],
-                            [
-                                'name'  => 'SecureAudit',
-                                'desc'  => 'Cybersecurity Audit Dashboard',
-                                'color' => 'from-red-600 to-orange-700',
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
-                            ],
-                            [
-                                'name'  => 'API Gateway',
-                                'desc'  => 'Enterprise REST API Platform',
-                                'color' => 'from-emerald-600 to-teal-700',
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
-                            ],
-                            [
-                                'name'  => 'BizFlow ERP',
-                                'desc'  => 'Custom ERP for SMBs',
-                                'color' => 'from-yellow-600 to-amber-700',
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>',
-                            ],
-                        ];
+                        $heroProjects = [];
+                        if (isset($data->projects) && $data->projects->isNotEmpty()) {
+                            foreach($data->projects as $idx => $proj) {
+                                $colors = ['from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-red-600 to-orange-700', 'from-emerald-600 to-teal-700'];
+                                $icons = [
+                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
+                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
+                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
+                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'
+                                ];
+                                $heroProjects[] = [
+                                    'name'  => $proj->title,
+                                    'desc'  => Str::limit($proj->description ?? '', 80),
+                                    'color' => $colors[$idx % count($colors)],
+                                    'icon'  => $icons[$idx % count($icons)],
+                                    'url'   => $proj->live_demo_link ?? '#products'
+                                ];
+                            }
+                        } else {
+                            $heroProjects = [
+                                [
+                                    'name'  => 'AP Coaching',
+                                    'desc'  => 'Coaching Centre Management SaaS',
+                                    'color' => 'from-cyan-600 to-blue-700',
+                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
+                                    'url'   => '#products'
+                                ],
+                                [
+                                    'name'  => 'AP Library',
+                                    'desc'  => 'Library Seat Booking Platform',
+                                    'color' => 'from-purple-600 to-indigo-700',
+                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
+                                    'url'   => '#products'
+                                ],
+                                [
+                                    'name'  => 'SecureAudit',
+                                    'desc'  => 'Cybersecurity Audit Dashboard',
+                                    'color' => 'from-red-600 to-orange-700',
+                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
+                                    'url'   => '#products'
+                                ],
+                                [
+                                    'name'  => 'API Gateway',
+                                    'desc'  => 'Enterprise REST API Platform',
+                                    'color' => 'from-emerald-600 to-teal-700',
+                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
+                                    'url'   => '#products'
+                                ],
+                                [
+                                    'name'  => 'BizFlow ERP',
+                                    'desc'  => 'Custom ERP for SMBs',
+                                    'color' => 'from-yellow-600 to-amber-700',
+                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>',
+                                    'url'   => '#products'
+                                ],
+                            ];
+                        }
                         @endphp
 
                         @foreach($heroProjects as $project)
@@ -253,9 +339,9 @@
                                     <p class="text-white/70 text-sm mt-1">{{ $project['desc'] }}</p>
                                 </div>
                                 {{-- Hover overlay --}}
-                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <a href="{{ $project['url'] ?? '#products' }}" class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm font-medium">View Project →</span>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         @endforeach
@@ -424,139 +510,97 @@
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
 
-{{-- ======================================================
-     ========= PRODUCTS SHOWCASE =========
-====================================================== --}}
+@if(isset($data->settings['projects_enabled']) && $data->settings['projects_enabled'] && isset($data->projects) && $data->projects->isNotEmpty())
 <section id="products" class="py-20 relative">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
         {{-- Header --}}
         <div class="text-center mb-14" data-aos="fade-up">
-            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Our SaaS Products</span>
-            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Products That <span class="gradient-text">Work For You</span></h2>
-            <p class="text-slate-400 mt-4 text-lg max-w-2xl mx-auto">Ready-to-deploy SaaS platforms solving real problems for real businesses across India.</p>
+            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Our Projects</span>
+            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Featured <span class="gradient-text">Projects</span></h2>
+            <p class="text-slate-400 mt-4 text-lg max-w-2xl mx-auto">Custom software and SaaS platforms engineered for performance, security, and scale.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {{-- Product 1: AP Coaching --}}
-            <div class="glass-card card-hover rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="100">
-                {{-- Screenshot Placeholder --}}
-                <div class="relative h-48 bg-gradient-to-br from-blue-600 to-cyan-600 overflow-hidden">
-                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <div class="w-14 h-14 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center mb-2 shadow-lg">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+            @foreach($data->projects as $i => $project)
+                @php
+                    $colors = [
+                        'from-blue-600 to-cyan-600',
+                        'from-purple-600 to-indigo-600',
+                        'from-red-600 to-orange-600',
+                        'from-emerald-600 to-teal-600',
+                    ];
+                    $color = $colors[$i % count($colors)];
+                    
+                    $icons = [
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'
+                    ];
+                    $icon = $icons[$i % count($icons)];
+                @endphp
+                <div class="glass-card card-hover rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="{{ 100 * ($i + 1) }}">
+                    <div class="relative h-48 bg-gradient-to-br {{ $color }} overflow-hidden">
+                        @if($project->thumbnail_image)
+                            <img src="@fileUrl($project->thumbnail_image)" alt="{{ $project->title }}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500">
+                        @else
+                            <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
+                        @endif
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <div class="w-14 h-14 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center mb-2 shadow-lg">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $icon !!}</svg>
+                            </div>
+                            @if(!$project->thumbnail_image)
+                                <span class="text-white/80 text-sm font-medium">{{ $project->title }}</span>
+                            @endif
                         </div>
-                        <span class="text-white/80 text-sm font-medium">AP Coaching Dashboard</span>
-                    </div>
-                    {{-- Top browser bar --}}
-                    <div class="absolute top-0 left-0 right-0 h-7 bg-black/30 flex items-center px-3 gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
-                    </div>
-                    {{-- Badge --}}
-                    <div class="absolute top-9 right-3 bg-cyan-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg shadow-cyan-500/30">LIVE</div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">AP Coaching</h3>
-                            <p class="text-cyan-400 text-xs font-medium mt-0.5">Coaching Centre Management SaaS</p>
+                        <div class="absolute top-0 left-0 right-0 h-7 bg-black/30 flex items-center px-3 gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
                         </div>
-                        <div class="w-9 h-9 rounded-lg bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+                        @if($project->featured)
+                            <div class="absolute top-9 right-3 bg-cyan-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg shadow-cyan-500/30">FEATURED</div>
+                        @else
+                            <div class="absolute top-9 right-3 bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg shadow-emerald-500/30">LIVE</div>
+                        @endif
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">{{ $project->title }}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">Complete coaching institute management — student admissions, fee collection, batch scheduling, attendance, results, and parent communication in one platform.</p>
-                    <div class="flex flex-wrap gap-2 mb-5">
-                        @foreach(['Multi-tenant', 'Fee Management', 'Attendance', 'Reports'] as $tag)
-                        <span class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs rounded-full">{{ $tag }}</span>
-                        @endforeach
-                    </div>
-                    <div class="flex gap-3">
-                        <a href="#" id="ap-coaching-demo-btn" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-xl btn-glow transition-all">
-                            View Demo
-                        </a>
-                        <a href="#contact" class="flex-1 text-center px-4 py-2.5 border border-cyan-500/30 text-cyan-400 text-sm font-semibold rounded-xl hover:bg-cyan-500/10 transition-all">
-                            Buy Now
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Product 2: AP Library --}}
-            <div class="glass-card card-hover rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="200">
-                <div class="relative h-48 bg-gradient-to-br from-purple-600 to-indigo-600 overflow-hidden">
-                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <div class="w-14 h-14 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center mb-2 shadow-lg">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-5">{{ Str::limit($project->description ?? '', 150) }}</p>
+                        @if($project->tech_stack_tags)
+                            <div class="flex flex-wrap gap-2 mb-5">
+                                @foreach(explode(',', $project->tech_stack_tags) as $tag)
+                                    <span class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs rounded-full">{{ trim($tag) }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                        <div class="flex gap-3">
+                            @if($project->live_demo_link)
+                                <a href="{{ $project->live_demo_link }}" target="_blank" rel="noopener noreferrer" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-xl btn-glow transition-all">
+                                    View Demo
+                                </a>
+                            @endif
+                            @if($project->github_link)
+                                <a href="{{ $project->github_link }}" target="_blank" rel="noopener noreferrer" class="flex-1 text-center px-4 py-2.5 border border-cyan-500/30 text-cyan-400 text-sm font-semibold rounded-xl hover:bg-cyan-500/10 transition-all">
+                                    GitHub
+                                </a>
+                            @endif
                         </div>
-                        <span class="text-white/80 text-sm font-medium">AP Library Seat Map</span>
-                    </div>
-                    <div class="absolute top-0 left-0 right-0 h-7 bg-black/30 flex items-center px-3 gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
-                    </div>
-                    <div class="absolute top-9 right-3 bg-purple-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg shadow-purple-500/30">LIVE</div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">AP Library</h3>
-                            <p class="text-cyan-400 text-xs font-medium mt-0.5">Library Seat Booking SaaS</p>
-                        </div>
-                        <div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        </div>
-                    </div>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-5">Smart library seat booking system with real-time availability, subscription plans, member management, and automated fee reminders.</p>
-                    <div class="flex flex-wrap gap-2 mb-5">
-                        @foreach(['Seat Booking', 'QR Check-in', 'Subscriptions', 'Analytics'] as $tag)
-                        <span class="px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs rounded-full">{{ $tag }}</span>
-                        @endforeach
-                    </div>
-                    <div class="flex gap-3">
-                        <a href="#" id="ap-library-demo-btn" class="flex-1 text-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition-all">
-                            View Demo
-                        </a>
-                        <a href="#contact" class="flex-1 text-center px-4 py-2.5 border border-purple-500/30 text-purple-400 text-sm font-semibold rounded-xl hover:bg-purple-500/10 transition-all">
-                            Buy Now
-                        </a>
                     </div>
                 </div>
-            </div>
-
-            {{-- Product 3: Coming Soon --}}
-            <div class="glass-card rounded-2xl overflow-hidden border border-white/5 relative" data-aos="fade-up" data-aos-delay="300">
-                <div class="relative h-48 bg-gradient-to-br from-slate-700 to-slate-800 overflow-hidden">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                        <div class="w-16 h-16 rounded-full border-2 border-dashed border-slate-500 flex items-center justify-center">
-                            <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                        </div>
-                        <span class="text-slate-500 text-sm">More Products Coming</span>
-                    </div>
-                </div>
-                <div class="p-6 flex flex-col items-center justify-center text-center gap-4">
-                    <div>
-                        <h3 class="font-grotesk font-bold text-xl text-slate-400 mb-2">More Coming Soon...</h3>
-                        <p class="text-slate-500 text-sm">We're building exciting new SaaS products. Be the first to know when they launch.</p>
-                    </div>
-                    <a href="#contact" class="px-5 py-2.5 border border-slate-600 text-slate-400 text-sm font-medium rounded-xl hover:border-cyan-500/40 hover:text-cyan-400 transition-all">
-                        Get Notified
-                    </a>
-                </div>
-                {{-- Coming soon ribbon --}}
-                <div class="absolute top-4 right-4 bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold px-3 py-1 rounded-full">SOON</div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
 
 {{-- ======================================================
      ========= HOW WE WORK — PROCESS SECTION =========
@@ -678,6 +722,58 @@
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
 
+@if(isset($data->settings['skills_enabled']) && $data->settings['skills_enabled'] && isset($data->skills) && $data->skills->isNotEmpty())
+<section id="skills" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">My Skills</span>
+            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Skills &amp; <span class="gradient-text">Technologies</span></h2>
+            <p class="text-slate-400 mt-4 text-lg max-w-xl mx-auto">A comprehensive overview of my technical expertise and proficiency levels.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            @foreach($data->skills as $i => $skill)
+                @php
+                    $skillName = strtolower($skill->name);
+                    $category = strtolower($skill->category ?? '');
+                    $iconClass = match(true) {
+                        str_contains($skillName, 'react') => 'fa-brands fa-react text-cyan-400',
+                        str_contains($skillName, 'vue') => 'fa-brands fa-vuejs text-emerald-400',
+                        str_contains($skillName, 'laravel') => 'fa-brands fa-laravel text-red-500',
+                        str_contains($skillName, 'php') => 'fa-brands fa-php text-indigo-400',
+                        str_contains($skillName, 'js') || str_contains($skillName, 'javascript') => 'fa-brands fa-js text-yellow-400',
+                        str_contains($skillName, 'typescript') || str_contains($skillName, 'ts') => 'fa-solid fa-code text-blue-400',
+                        str_contains($skillName, 'python') => 'fa-brands fa-python text-blue-500',
+                        str_contains($skillName, 'css') => 'fa-brands fa-css3-alt text-blue-400',
+                        str_contains($skillName, 'tailwind') => 'fa-solid fa-wind text-cyan-400',
+                        str_contains($skillName, 'docker') => 'fa-brands fa-docker text-blue-400',
+                        str_contains($skillName, 'git') => 'fa-brands fa-git-alt text-orange-500',
+                        str_contains($skillName, 'database') || str_contains($skillName, 'sql') || str_contains($skillName, 'mysql') => 'fa-solid fa-database text-blue-300',
+                        default => 'fa-solid fa-code text-cyan-400'
+                    };
+                @endphp
+                <div class="glass-card border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-4 group hover:border-cyan-500/30 hover:scale-105 transition-all duration-300 cursor-default" data-aos="zoom-in" data-aos-delay="{{ 50 * $i }}">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-electric-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <i class="{{ $iconClass }} text-2xl"></i>
+                    </div>
+                    <div class="text-center w-full">
+                        <h3 class="font-grotesk font-bold text-white text-base group-hover:text-cyan-400 transition-colors">{{ $skill->name }}</h3>
+                        @if($skill->category)
+                            <span class="text-slate-500 text-xs mt-1 block">{{ $skill->category }}</span>
+                        @endif
+                        <div class="w-full bg-navy-950 rounded-full h-1.5 mt-3 overflow-hidden border border-cyan-500/5">
+                            <div class="bg-gradient-to-r from-cyan-500 to-electric-500 h-1.5 rounded-full" style="width: {{ $skill->level }}%"></div>
+                        </div>
+                        <span class="text-cyan-400 text-xs font-semibold mt-1.5 block">{{ $skill->level }}% Proficiency</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
+
 {{-- ======================================================
      ========= WHY CHOOSE US =========
 ====================================================== --}}
@@ -747,6 +843,72 @@
 </section>
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+
+@if(isset($data->settings['experience_enabled']) && $data->settings['experience_enabled'] && isset($data->experiences) && $data->experiences->isNotEmpty())
+<section id="experience" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Journey</span>
+            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Work <span class="gradient-text">Experience</span></h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto flex flex-col gap-8">
+            @foreach($data->experiences as $i => $experience)
+                <div class="glass-card border border-white/5 hover:border-cyan-500/30 p-6 md:p-8 rounded-2xl transition-all duration-300 relative group" data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 100 }}">
+                    <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-electric-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">{{ $experience->role }}</h3>
+                            <p class="text-cyan-400 text-sm font-medium mt-1">{{ $experience->company }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-sm font-medium bg-white/5 px-3 py-1 rounded-full border border-white/10 self-start md:self-auto">
+                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            {{ $experience->start_date?->format('M Y') ?? '' }} - {{ $experience->end_date ? $experience->end_date->format('M Y') : 'Present' }}
+                        </div>
+                    </div>
+                    @if($experience->description)
+                        <p class="text-slate-400 text-sm leading-relaxed">{{ $experience->description }}</p>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
+
+@if(isset($data->settings['education_enabled']) && $data->settings['education_enabled'] && isset($data->educations) && $data->educations->isNotEmpty())
+<section id="education" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Academic Background</span>
+            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">My <span class="gradient-text">Education</span></h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto flex flex-col gap-8">
+            @foreach($data->educations as $i => $education)
+                <div class="glass-card border border-white/5 hover:border-cyan-500/30 p-6 md:p-8 rounded-2xl transition-all duration-300 relative group" data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 100 }}">
+                    <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-purple-400 transition-colors">{{ $education->degree }}</h3>
+                            <p class="text-purple-400 text-sm font-medium mt-1">{{ $education->institute }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-sm font-medium bg-white/5 px-3 py-1 rounded-full border border-white/10 self-start md:self-auto">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            {{ $education->start_date?->format('M Y') ?? '' }} - {{ $education->end_date ? $education->end_date->format('M Y') : 'Present' }}
+                        </div>
+                    </div>
+                    @if($education->description)
+                        <p class="text-slate-400 text-sm leading-relaxed">{{ $education->description }}</p>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
 
 {{-- ======================================================
      ========= PRICING SECTION =========
@@ -967,113 +1129,100 @@
 {{-- ======================================================
      ========= CODEBB PREVIEW =========
 ====================================================== --}}
+@if(isset($data->settings['blog_enabled']) && $data->settings['blog_enabled'] && isset($data->posts) && $data->posts->isNotEmpty())
 <section id="codebb" class="py-20 relative">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12" data-aos="fade-up">
             <div>
-                <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Latest from CodeBB</span>
+                <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Latest from Blog</span>
                 <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Dev <span class="gradient-text">Insights</span></h2>
                 <p class="text-slate-400 mt-3 text-lg max-w-lg">Code snippets, tutorials, and tech insights from our engineering team.</p>
             </div>
-            <a href="#" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-4 transition-all whitespace-nowrap">
+            <a href="{{ route('blog') }}" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-4 transition-all whitespace-nowrap">
                 View All Posts
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
-            @php
-            $posts = [
-                [
-                    'category' => 'Laravel',
-                    'date'     => 'May 28, 2026',
-                    'read_time'=> '5 min read',
-                    'title'    => 'Building Multi-Tenant SaaS with Laravel 12 & Tenancy for Laravel',
-                    'excerpt'  => 'A deep-dive into implementing true multi-tenancy in Laravel 12 — database isolation, subdomain routing, and per-tenant configuration.',
-                    'icon_bg'  => 'from-red-600 to-orange-600',
-                    'icon'     => 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
-                    'tags'     => ['Laravel', 'SaaS', 'Multi-tenant'],
-                ],
-                [
-                    'category' => 'Security',
-                    'date'     => 'May 20, 2026',
-                    'read_time'=> '8 min read',
-                    'title'    => 'Top 10 OWASP Vulnerabilities Found in PHP Applications (With Fixes)',
-                    'excerpt'  => 'We audited 15 real PHP apps and catalogued the most common security holes — SQL injection, XSS, CSRF, broken auth, and how to fix each.',
-                    'icon_bg'  => 'from-red-700 to-rose-700',
-                    'icon'     => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
-                    'tags'     => ['Security', 'PHP', 'OWASP'],
-                ],
-                [
-                    'category' => 'API Design',
-                    'date'     => 'May 12, 2026',
-                    'read_time'=> '6 min read',
-                    'title'    => 'REST API Best Practices: Rate Limiting, Versioning & Response Formatting',
-                    'excerpt'  => 'How we design clean, scalable REST APIs — from consistent response formats and HTTP status codes to throttling strategies and versioning.',
-                    'icon_bg'  => 'from-emerald-600 to-teal-600',
-                    'icon'     => 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
-                    'tags'     => ['API', 'REST', 'Best Practices'],
-                ],
-            ];
-            @endphp
-
-            @foreach($posts as $i => $post)
-            <article class="glass-card card-hover border border-white/5 rounded-2xl overflow-hidden group transition-all duration-300"
-                     data-aos="fade-up" data-aos-delay="{{ 100 * ($i + 1) }}">
-                {{-- Thumbnail --}}
-                <div class="relative h-44 bg-gradient-to-br {{ $post['icon_bg'] }} overflow-hidden">
-                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-16 h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
-                            <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $post['icon'] }}"/>
-                            </svg>
+            @foreach($data->posts as $i => $post)
+                @php
+                    $colors = [
+                        'from-red-600 to-orange-600',
+                        'from-red-700 to-rose-700',
+                        'from-emerald-600 to-teal-600',
+                    ];
+                    $color = $colors[$i % count($colors)];
+                    
+                    $icons = [
+                        'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
+                        'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                        'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+                    ];
+                    $icon = $icons[$i % count($icons)];
+                    
+                    $wordCount = str_word_count(strip_tags($post->content));
+                    $readTime = ceil($wordCount / 200) ?: 1;
+                    
+                    $categoryName = $post->categories->first()?->name ?? 'Tech';
+                @endphp
+                <article class="glass-card card-hover border border-white/5 rounded-2xl overflow-hidden group transition-all duration-300"
+                         data-aos="fade-up" data-aos-delay="{{ 100 * ($i + 1) }}">
+                    <div class="relative h-44 bg-gradient-to-br {{ $color }} overflow-hidden">
+                        @if($post->featured_image)
+                            <img src="@fileUrl($post->featured_image)" alt="{{ $post->title }}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500">
+                        @else
+                            <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
+                        @endif
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 rounded-2xl bg-white/15 border border-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
+                                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $icon }}"/>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    {{-- Category badge --}}
-                    <div class="absolute top-3 left-3">
-                        <span class="px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white text-xs font-semibold rounded-full border border-white/20">{{ $post['category'] }}</span>
-                    </div>
-                </div>
-
-                <div class="p-6">
-                    {{-- Meta --}}
-                    <div class="flex items-center gap-3 mb-3 text-slate-500 text-xs">
-                        <div class="flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            {{ $post['date'] }}
-                        </div>
-                        <span>•</span>
-                        <div class="flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            {{ $post['read_time'] }}
+                        <div class="absolute top-3 left-3">
+                            <span class="px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white text-xs font-semibold rounded-full border border-white/20">{{ $categoryName }}</span>
                         </div>
                     </div>
 
-                    <h3 class="font-grotesk font-semibold text-white text-base leading-snug mb-3 group-hover:text-cyan-300 transition-colors line-clamp-2">{{ $post['title'] }}</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">{{ $post['excerpt'] }}</p>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3 text-slate-500 text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{ $post->published_at ? $post->published_at->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                            </div>
+                            <span>•</span>
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {{ $readTime }} min read
+                            </div>
+                        </div>
 
-                    {{-- Tags --}}
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        @foreach($post['tags'] as $tag)
-                        <span class="px-2 py-0.5 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs rounded-full">{{ $tag }}</span>
-                        @endforeach
+                        <h3 class="font-grotesk font-semibold text-white text-base leading-snug mb-3 group-hover:text-cyan-300 transition-colors line-clamp-2">{{ $post->title }}</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">{{ Str::limit(strip_tags($post->content), 150) }}</p>
+
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @foreach($post->categories as $cat)
+                                <span class="px-2 py-0.5 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs rounded-full">{{ $cat->name }}</span>
+                            @endforeach
+                        </div>
+
+                        <a href="{{ route('blog.show', $post->slug) }}" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-3 transition-all group/link">
+                            Read More
+                            <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
                     </div>
-
-                    <a href="#" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-3 transition-all group/link">
-                        Read More
-                        <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                    </a>
-                </div>
-            </article>
+                </article>
             @endforeach
         </div>
     </div>
 </section>
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
 
 {{-- ======================================================
      ========= CONTACT SECTION =========
@@ -1170,25 +1319,29 @@
                 <div class="glass-card border border-white/5 rounded-2xl p-7">
                     <h3 class="font-grotesk font-bold text-xl text-white mb-6">Contact Directly</h3>
                     <div class="flex flex-col gap-5">
+                        @if($data->profile?->email)
                         <div class="flex items-center gap-4 group">
                             <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/20 transition-all">
                                 <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">Email Address</div>
-                                <a href="mailto:hello@amanprojects.in" class="text-white font-medium hover:text-cyan-400 transition-colors">hello@amanprojects.in</a>
+                                <a href="mailto:{{ $data->profile->email }}" class="text-white font-medium hover:text-cyan-400 transition-colors">{{ $data->profile->email }}</a>
                             </div>
                         </div>
+                        @endif
 
+                        @if($data->profile?->phone)
                         <div class="flex items-center gap-4 group">
                             <div class="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-all">
                                 <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">WhatsApp</div>
-                                <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="text-white font-medium hover:text-green-400 transition-colors">+91-98765-43210</a>
+                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-white font-medium hover:text-green-400 transition-colors">{{ $data->profile->phone }}</a>
                             </div>
                         </div>
+                        @endif
 
                         <div class="flex items-center gap-4 group">
                             <div class="w-12 h-12 rounded-xl bg-electric-500/10 border border-electric-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-electric-500/20 transition-all">
@@ -1196,14 +1349,15 @@
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">Location</div>
-                                <span class="text-white font-medium">Bihar, India 🇮🇳</span>
+                                <span class="text-white font-medium">{{ $data->profile?->location ?? 'Bihar, India 🇮🇳' }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                @if($data->profile?->phone)
                 {{-- WhatsApp CTA --}}
-                <a href="https://wa.me/919876543210?text=Hi%20AmanProjects!%20I%20want%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"
+                <a href="https://wa.me/{{ $cleanPhone }}?text=Hi%20{{ rawurlencode($siteName) }}!%20I%20want%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer"
                    id="whatsapp-cta-btn"
                    class="glass-card border border-green-500/20 rounded-2xl p-6 flex items-center gap-5 hover:bg-green-500/5 hover:border-green-500/40 transition-all group">
                     <div class="w-14 h-14 rounded-2xl bg-green-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
@@ -1215,6 +1369,7 @@
                     </div>
                     <svg class="w-5 h-5 text-slate-500 ml-auto group-hover:translate-x-1 group-hover:text-green-400 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
+                @endif
 
                 {{-- Business hours --}}
                 <div class="glass-card border border-white/5 rounded-2xl p-6">
@@ -1263,22 +1418,57 @@
                 </p>
                 {{-- Social Icons --}}
                 <div class="flex items-center gap-3">
-                    <a href="https://github.com/amanprojects" target="_blank" rel="noopener noreferrer" id="footer-github-link"
-                       class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all" aria-label="GitHub">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                    </a>
-                    <a href="https://youtube.com/@SafeBanda" target="_blank" rel="noopener noreferrer" id="footer-youtube-link"
-                       class="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-500/40 transition-all" aria-label="YouTube — SafeBanda">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    </a>
-                    <a href="https://linkedin.com/company/amanprojects" target="_blank" rel="noopener noreferrer" id="footer-linkedin-link"
-                       class="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/40 transition-all" aria-label="LinkedIn">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                    </a>
-                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" id="footer-whatsapp-link"
-                       class="w-9 h-9 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 hover:bg-green-500/20 hover:border-green-500/40 transition-all" aria-label="WhatsApp">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </a>
+                    @if(isset($data->socialLinks) && $data->socialLinks->isNotEmpty())
+                        @foreach($data->socialLinks as $link)
+                            @php
+                                $lowerName = strtolower($link->name);
+                                $iconClass = match(true) {
+                                    str_contains($lowerName, 'github') => 'fa-brands fa-github text-slate-400 hover:text-white',
+                                    str_contains($lowerName, 'youtube') => 'fa-brands fa-youtube text-red-400 hover:text-white',
+                                    str_contains($lowerName, 'linkedin') => 'fa-brands fa-linkedin text-blue-400 hover:text-white',
+                                    str_contains($lowerName, 'whatsapp') => 'fa-brands fa-whatsapp text-green-400 hover:text-white',
+                                    str_contains($lowerName, 'twitter') || str_contains($lowerName, 'x') => 'fa-brands fa-x-twitter text-slate-400 hover:text-white',
+                                    str_contains($lowerName, 'facebook') => 'fa-brands fa-facebook text-blue-500 hover:text-white',
+                                    str_contains($lowerName, 'instagram') => 'fa-brands fa-instagram text-pink-500 hover:text-white',
+                                    default => 'fa-solid fa-link text-cyan-400'
+                                };
+                                $bgClass = match(true) {
+                                    str_contains($lowerName, 'github') => 'bg-white/5 border-white/10 hover:border-white/20',
+                                    str_contains($lowerName, 'youtube') => 'bg-red-500/10 border-red-500/20 hover:border-red-500/40 hover:bg-red-500/20',
+                                    str_contains($lowerName, 'linkedin') => 'bg-blue-500/10 border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/20',
+                                    str_contains($lowerName, 'whatsapp') => 'bg-green-500/10 border-green-500/20 hover:border-green-500/40 hover:bg-green-500/20',
+                                    str_contains($lowerName, 'twitter') || str_contains($lowerName, 'x') => 'bg-white/5 border-white/10 hover:border-white/20',
+                                    str_contains($lowerName, 'facebook') => 'bg-blue-500/10 border-blue-500/20 hover:border-blue-500/40',
+                                    str_contains($lowerName, 'instagram') => 'bg-pink-500/10 border-pink-500/20 hover:border-pink-500/40',
+                                    default => 'bg-cyan-500/10 border-cyan-500/20 hover:border-cyan-500/40'
+                                };
+                            @endphp
+                            <a href="{{ $link->url }}" target="_blank" rel="noopener noreferrer"
+                               class="w-9 h-9 rounded-lg {{ $bgClass }} flex items-center justify-center transition-all" aria-label="{{ $link->name }}">
+                                <i class="{{ $iconClass }} text-base"></i>
+                            </a>
+                        @endforeach
+                    @else
+                        {{-- Static fallback if empty --}}
+                        <a href="https://github.com/amanprojects" target="_blank" rel="noopener noreferrer" id="footer-github-link"
+                           class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all" aria-label="GitHub">
+                            <i class="fa-brands fa-github text-base"></i>
+                        </a>
+                        <a href="https://youtube.com/@SafeBanda" target="_blank" rel="noopener noreferrer" id="footer-youtube-link"
+                           class="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-500/40 transition-all" aria-label="YouTube — SafeBanda">
+                            <i class="fa-brands fa-youtube text-base"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/amanprojects" target="_blank" rel="noopener noreferrer" id="footer-linkedin-link"
+                           class="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/40 transition-all" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin text-base"></i>
+                        </a>
+                        @if($data->profile?->phone)
+                        <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" id="footer-whatsapp-link"
+                           class="w-9 h-9 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 hover:bg-green-500/20 hover:border-green-500/40 transition-all" aria-label="WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                        </a>
+                        @endif
+                    @endif
                 </div>
             </div>
 
@@ -1364,10 +1554,11 @@
     </div>
 </footer>
 
+@if($data->profile?->phone)
 {{-- ======================================================
      FLOATING WHATSAPP BUTTON
 ====================================================== --}}
-<a href="https://wa.me/919876543210?text=Hi%20AmanProjects!%20I%20have%20a%20project%20enquiry." target="_blank" rel="noopener noreferrer"
+<a href="https://wa.me/{{ $cleanPhone }}?text=Hi%20{{ rawurlencode($siteName) }}!%20I%20have%20a%20project%20enquiry." target="_blank" rel="noopener noreferrer"
    id="floating-whatsapp-btn"
    class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 flex items-center justify-center shadow-2xl shadow-green-500/40 hover:scale-110 hover:shadow-green-500/60 transition-all"
    aria-label="Chat on WhatsApp">
@@ -1375,6 +1566,7 @@
     {{-- Pulse ring --}}
     <span class="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></span>
 </a>
+@endif
 
 @endsection
 

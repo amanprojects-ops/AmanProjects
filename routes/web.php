@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(MaintenanceMiddleware::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/welcome', function () {
-        return view('welcome');
-    })->name('welcome');
     Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
     Route::get('/blog/{slug}', [HomeController::class, 'blogShow'])->name('blog.show');
     Route::post('/contact', [HomeController::class, 'contact'])->name('contact.store');

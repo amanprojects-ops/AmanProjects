@@ -32,7 +32,7 @@ class HomeController extends Controller
         ])->first();
 
         // Base data
-        $data = [
+        $data = (object) [
             'user' => $user,
             'profile' => $user?->profile,
             'socialLinks' => $user?->socialLinks ?? collect(),
@@ -41,40 +41,40 @@ class HomeController extends Controller
 
         // Load sections based on settings (avoid unnecessary queries)
         if ($settings['skills_enabled']) {
-            $data['skills'] = Skill::where('show', true)
+            $data->skills = Skill::where('show', true)
                 ->orderBy('category')
                 ->orderBy('name')
                 ->get();
         }
 
         if ($settings['projects_enabled']) {
-            $data['projects'] = Project::where('status', 'published')
+            $data->projects = Project::where('status', 'published')
                 ->orderByDesc('featured')
                 ->latest()
                 ->get();
         }
 
         if ($settings['experience_enabled']) {
-            $data['experiences'] = Experience::orderBy('order')
+            $data->experiences = Experience::orderBy('order')
                 ->orderByDesc('start_date')
                 ->get();
         }
 
         if ($settings['education_enabled']) {
-            $data['educations'] = Education::orderBy('order')
+            $data->educations = Education::orderBy('order')
                 ->orderByDesc('start_date')
                 ->get();
         }
 
         if ($settings['blog_enabled']) {
-            $data['posts'] = Post::with('categories')
+            $data->posts = Post::with('categories')
                 ->where('status', 'published')
                 ->latest('published_at')
                 ->take(3)
                 ->get();
         }
 
-        return view('home', $data);
+        return view('welcome', compact('data'));
     }
 
     public function blog(): View
@@ -115,7 +115,8 @@ class HomeController extends Controller
     private function getSettings(): array
     {
         return Setting::getMany([
-            'site_title' => 'Portfolio',
+            'site_name' => 'AmanProjects',
+            'site_title' => 'AmanProjects | Home',
             'meta_description' => '',
             'meta_keywords' => '',
             'favicon' => '',

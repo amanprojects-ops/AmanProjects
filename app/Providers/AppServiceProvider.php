@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['layouts.app', 'partials.*', 'blog.*'], function ($view) {
             if (!$view->offsetExists('settings')) {
                 $view->with('settings', Setting::getMany([
-                    'site_title' => 'Portfolio',
+                    'site_name' => 'AmanProjects',
+                    'site_title' => 'AmanProjects | Home',
                     'meta_description' => '',
                     'meta_keywords' => '',
                     'favicon' => '',

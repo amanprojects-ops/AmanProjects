@@ -10,7 +10,8 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            'site_title' => 'My Portfolio',
+            'site_name' => 'AmanProjects',
+            'site_title' => 'AmanProjects | Home',
             'meta_description' => 'Personal portfolio website',
             'meta_keywords' => 'portfolio, developer, web development',
             'favicon' => '',
