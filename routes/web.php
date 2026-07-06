@@ -15,3 +15,12 @@ Route::middleware(MaintenanceMiddleware::class)->group(function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+use App\Http\Controllers\SitemapController;
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-categories.xml', [SitemapController::class, 'categories'])->name('sitemap.categories');
+Route::get('/sitemap-projects.xml', [SitemapController::class, 'projects'])->name('sitemap.projects');
+Route::get('/sitemap-blogs.xml', [SitemapController::class, 'blogs'])->name('sitemap.blogs');
+Route::get('/sitemap-images.xml', [SitemapController::class, 'images'])->name('sitemap.images');
+Route::get('/sitemap-local.xml', [SitemapController::class, 'local'])->name('sitemap.local');

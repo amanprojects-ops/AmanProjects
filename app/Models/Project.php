@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+
 class Project extends Model
 {
     use HasFactory, SoftDeletes;
@@ -41,5 +44,21 @@ class Project extends Model
             return [];
         }
         return array_map('trim', explode(',', $this->tech_stack_tags));
+    }
+
+    /**
+     * Get the albums for the project.
+     */
+    public function albums(): HasMany
+    {
+        return $this->hasMany(Album::class);
+    }
+
+    /**
+     * Get all of the images for the project's albums.
+     */
+    public function albumImages(): HasManyThrough
+    {
+        return $this->hasManyThrough(AlbumImage::class, Album::class);
     }
 }

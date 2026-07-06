@@ -14,6 +14,7 @@ class SettingRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'site_name' => 'nullable|string|max:255',
             'site_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:500',
@@ -29,6 +30,12 @@ class SettingRequest extends FormRequest
             'education_enabled' => 'boolean',
             'blog_enabled' => 'boolean',
             'contact_enabled' => 'boolean',
+            'local_business_address' => 'nullable|string|max:500',
+            'local_business_phone' => 'nullable|string|max:100',
+            'local_business_email' => 'nullable|email|max:255',
+            'local_business_lat' => 'nullable|string|max:100',
+            'local_business_lng' => 'nullable|string|max:100',
         ];
     }
+
 }

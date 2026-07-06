@@ -1,44 +1,67 @@
 @extends('layouts.admin')
 
 @section('title', 'Categories')
+@section('page_title', '<span>Categories</span>')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Categories</h1>
-    <a href="{{ route('admin.categories.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Add Category</a>
+<div class="page-header">
+    <h1 class="page-title">
+        <span class="title-icon"><i class="fa-solid fa-folder-open"></i></span>
+        Categories
+    </h1>
+    <a href="{{ route('admin.categories.create') }}" class="btn-admin-primary">
+        <i class="fa-solid fa-plus"></i> Add Category
+    </a>
 </div>
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Slug</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Posts</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @forelse($categories as $category)
+<div class="admin-card">
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $category->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ $category->slug }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $category->posts_count }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="text-blue-600 hover:underline mr-3">Edit</a>
-                        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
-                        </form>
-                    </td>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Posts</th>
+                    <th style="text-align:right;">Actions</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">No categories found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse($categories as $category)
+                    <tr>
+                        <td style="font-weight:600;color:#1e293b;">{{ $category->name }}</td>
+                        <td>
+                            <code style="background:#f1f5f9;padding:3px 8px;border-radius:6px;font-size:12.5px;color:#6366f1;">{{ $category->slug }}</code>
+                        </td>
+                        <td>
+                            <span style="background:#ede9fe;color:#6d28d9;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">{{ $category->posts_count }}</span>
+                        </td>
+                        <td style="text-align:right;white-space:nowrap;">
+                            <div style="display:inline-flex;gap:6px;">
+                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn-admin-edit">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this category?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-admin-delete">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-folder-open"></i>
+                                <p>No categories found.</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

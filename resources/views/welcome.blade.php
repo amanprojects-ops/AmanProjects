@@ -1,28 +1,16 @@
 @extends('layouts.app')
 
-@section('title', $data->settings['site_title'] ?? 'AmanProjects — Custom Software, SaaS & Security Solutions | Bihar, India')
+@section('title', $data->settings['site_title'] ?? 'AmanProjects — Custom Software, SaaS & Security Solutions | Saharsa, Bihar, India')
 @section('meta_description', $data->settings['meta_description'] ?? 'AmanProjects builds premium custom software, SaaS platforms, and cybersecurity solutions. Trusted by clients across India. Web Development, API Integration & more.')
 @section('meta_keywords', $data->settings['meta_keywords'] ?? 'software company bihar, custom software india, saas development, laravel developer, ethical hacking, web development bihar, amanprojects')
 @section('use_tailwind', true)
 
 @section('content')
 @php
-    $siteName = $data->settings['site_name'] ?? 'AmanProjects';
-    $firstWord = 'Aman';
-    $secondWord = 'Projects';
-    if (preg_match('/^([A-Z][a-z]+)([A-Z].*)$/', $siteName, $matches)) {
-        $firstWord = $matches[1];
-        $secondWord = $matches[2];
-    } elseif (str_contains($siteName, ' ')) {
-        $parts = explode(' ', $siteName, 2);
-        $firstWord = $parts[0];
-        $secondWord = $parts[1];
-    } else {
-        $firstWord = $siteName;
-        $secondWord = '';
-    }
-    
-    $cleanPhone = preg_replace('/[^0-9]/', '', $data->profile?->phone ?? '919876543210');
+    // Controller pre-computes these — just alias for convenience in blade
+    $firstWord  = $siteNameParts[0] ?? 'Aman';
+    $secondWord = $siteNameParts[1] ?? 'Projects';
+    $siteName   = $data->settings['site_name'] ?? 'AmanProjects';
 @endphp
 {{-- ======================================================
      TOP BAR
@@ -31,7 +19,7 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between text-sm text-slate-400">
         <div class="flex items-center gap-2">
             <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            <span>{{ $data->profile?->location ?? 'Bihar, India' }}</span>
+            <span>{{ $data->profile?->location ?? 'Saharsa, Bihar, India' }}</span>
         </div>
         <div class="flex items-center gap-6">
             @if($data->profile?->phone)
@@ -62,17 +50,26 @@
     x-data="{ open: false, scrolled: false }"
     @scroll.window="scrolled = (window.scrollY > 50)"
     :class="scrolled ? 'bg-navy-900/95 backdrop-blur-xl shadow-lg shadow-cyan-500/5 border-b border-cyan-500/10' : 'bg-transparent border-b border-transparent'"
-    class="sticky top-0 z-50 transition-all duration-300 w-full"
->
+    class="sticky top-0 z-50 transition-all duration-300 w-full">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
         <div class="flex items-center justify-between h-16">
 
             {{-- LOGO --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-2 group" aria-label="{{ $siteName }} Home">
-                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-all">
-                    <span class="text-white font-grotesk font-bold text-sm">AP</span>
-                </div>
-                <span class="font-grotesk font-bold text-xl text-white">{{ $firstWord }}<span class="text-cyan-400">{{ $secondWord }}</span><span class="text-cyan-500 ml-0.5">.</span></span>
+            <a href="{{ route('home') }}" class="flex items-center gap-2 group" aria-label="{{ $siteName }} — Home" itemprop="url">
+                @if(!empty($data->settings['logo']))
+                    <img src="@fileUrl($data->settings['logo'])" alt="{{ $siteName }} logo" width="180" height="36" class="h-9 w-auto max-w-[180px] object-contain transition-all duration-200" fetchpriority="high">
+                @else
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-all" aria-hidden="true">
+                        <span class="text-white font-grotesk font-bold text-sm">
+                            @if(isset($firstWord[0]) && isset($secondWord[0]))
+                                {{ strtoupper($firstWord[0] . $secondWord[0]) }}
+                            @else
+                                {{ strtoupper(substr($siteName, 0, 2)) }}
+                            @endif
+                        </span>
+                    </div>
+                    <span class="font-grotesk font-bold text-xl text-white" itemprop="name">{{ $firstWord }}<span class="text-cyan-400">{{ $secondWord }}</span><span class="text-cyan-500 ml-0.5">.</span></span>
+                @endif
             </a>
 
             {{-- DESKTOP NAV --}}
@@ -183,9 +180,9 @@
 {{-- ======================================================
      ========= HERO SECTION =========
 ====================================================== --}}
-<section id="home" class="relative min-h-screen flex flex-col justify-center overflow-hidden py-20 lg:py-0">
+<section id="home" class="relative min-h-screen flex flex-col justify-center overflow-hidden py-10 lg:py-0" itemscope itemtype="https://schema.org/WPHeader">
     {{-- Background gradient blobs --}}
-    <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-20 right-10 w-96 h-96 bg-electric-500/8 rounded-full blur-3xl"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-600/4 rounded-full blur-3xl"></div>
@@ -197,35 +194,35 @@
         <div class="flex flex-col gap-6">
             {{-- Badge --}}
             <div class="inline-flex self-start items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium" data-aos="fade-right" data-aos-delay="100">
-                <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                Trusted Software Partner from {{ $data->profile?->location ?? 'Bihar, India' }}
+                <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" aria-hidden="true"></span>
+                <span>{{ $data->settings['hero_badge'] ?? ('Trusted Software Partner from ' . ($data->profile?->location ?? 'Saharsa, Bihar, India')) }}</span>
             </div>
 
             {{-- Headline --}}
             <div data-aos="fade-up" data-aos-delay="200">
-                <h1 class="font-grotesk font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight text-white">
-                    We <span class="gradient-text">Build.</span><br>
-                    We <span class="gradient-text">Scale.</span><br>
-                    We <span class="gradient-text">Secure.</span>
+                <h1 class="font-grotesk font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight text-white" itemprop="headline">
+                    {!! \App\Http\Controllers\HomeController::renderHeadline($data->settings['hero_title_line1'] ?? 'We Build.') !!}<br>
+                    {!! \App\Http\Controllers\HomeController::renderHeadline($data->settings['hero_title_line2'] ?? 'We Scale.') !!}<br>
+                    {!! \App\Http\Controllers\HomeController::renderHeadline($data->settings['hero_title_line3'] ?? 'We Secure.') !!}
                 </h1>
             </div>
 
             {{-- Subtext --}}
             <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-lg" data-aos="fade-up" data-aos-delay="300">
-                Custom Software, SaaS Products &amp; Security Solutions from <span class="text-cyan-400 font-semibold">{{ $data->profile?->location ?? 'Bihar, India' }}.</span> We turn your ideas into powerful digital products that drive real business results.
+                {{ $data->settings['hero_subtitle'] ?? 'Custom Software, SaaS Products & Security Solutions from Saharsa, Bihar, India. We turn your ideas into powerful digital products that drive real business results.' }}
             </p>
 
             {{-- CTA Buttons --}}
             <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="400">
-                <a href="#products" id="hero-view-demo-btn"
+                <a href="{{ $data->settings['hero_cta1_link'] ?? '#products' }}" id="hero-view-demo-btn"
                    class="group flex items-center gap-3 px-6 py-3.5 bg-gradient-to-r from-cyan-500 to-electric-500 text-white font-semibold rounded-xl btn-glow text-sm transition-all">
-                    <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                    View Demo
+                    <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    {{ $data->settings['hero_cta1_text'] ?? 'View Demo' }}
                 </a>
-                <a href="#products" id="hero-view-products-btn"
+                <a href="{{ $data->settings['hero_cta2_link'] ?? '#products' }}" id="hero-view-products-btn"
                    class="group flex items-center gap-3 px-6 py-3.5 bg-transparent border border-cyan-500/40 text-cyan-400 font-semibold rounded-xl hover:bg-cyan-500/10 hover:border-cyan-400 text-sm transition-all">
                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    View Products
+                    {{ $data->settings['hero_cta2_text'] ?? 'View Products' }}
                 </a>
             </div>
 
@@ -233,119 +230,62 @@
             <div class="flex flex-wrap items-center gap-6 pt-2" data-aos="fade-up" data-aos-delay="500">
                 <div class="flex items-center gap-2 text-slate-400 text-sm">
                     <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                    20+ Projects Delivered
+                    {{ $data->settings['hero_trust1'] ?? '20+ Projects Delivered' }}
                 </div>
                 <div class="flex items-center gap-2 text-slate-400 text-sm">
                     <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                    Security-First Approach
+                    {{ $data->settings['hero_trust2'] ?? 'Security-First Approach' }}
                 </div>
                 <div class="flex items-center gap-2 text-slate-400 text-sm">
                     <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                    Made in India 🇮🇳
+                    {{ $data->settings['hero_trust3'] ?? 'Made in India 🇮🇳' }}
                 </div>
             </div>
-        </div>
+            </div>
 
-        {{-- Right: Project Carousel --}}
+        {{-- Right: Project Carousel — heroProjects pre-built in controller --}}
         <div class="relative" data-aos="fade-left" data-aos-delay="300">
             {{-- Decorative glow ring --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-electric-500/20 rounded-2xl blur-2xl scale-105"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-electric-500/20 rounded-2xl blur-2xl scale-105" aria-hidden="true"></div>
 
             <div class="relative glass-card p-1 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10">
                 {{-- Swiper Carousel --}}
-                <div class="swiper heroSwiper rounded-xl" style="--swiper-navigation-color: #06b6d4; --swiper-pagination-color: #06b6d4; --swiper-navigation-size: 20px;">
+                <div class="swiper heroSwiper rounded-xl" role="region" aria-label="Featured projects carousel" style="--swiper-navigation-color: #06b6d4; --swiper-pagination-color: #06b6d4; --swiper-navigation-size: 20px;">
                     <div class="swiper-wrapper">
-
-                        @php
-                        $heroProjects = [];
-                        if (isset($data->projects) && $data->projects->isNotEmpty()) {
-                            foreach($data->projects as $idx => $proj) {
-                                $colors = ['from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-red-600 to-orange-700', 'from-emerald-600 to-teal-700'];
-                                $icons = [
-                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
-                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
-                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
-                                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'
-                                ];
-                                $heroProjects[] = [
-                                    'name'  => $proj->title,
-                                    'desc'  => Str::limit($proj->description ?? '', 80),
-                                    'color' => $colors[$idx % count($colors)],
-                                    'icon'  => $icons[$idx % count($icons)],
-                                    'url'   => $proj->live_demo_link ?? '#products'
-                                ];
-                            }
-                        } else {
-                            $heroProjects = [
-                                [
-                                    'name'  => 'AP Coaching',
-                                    'desc'  => 'Coaching Centre Management SaaS',
-                                    'color' => 'from-cyan-600 to-blue-700',
-                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>',
-                                    'url'   => '#products'
-                                ],
-                                [
-                                    'name'  => 'AP Library',
-                                    'desc'  => 'Library Seat Booking Platform',
-                                    'color' => 'from-purple-600 to-indigo-700',
-                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
-                                    'url'   => '#products'
-                                ],
-                                [
-                                    'name'  => 'SecureAudit',
-                                    'desc'  => 'Cybersecurity Audit Dashboard',
-                                    'color' => 'from-red-600 to-orange-700',
-                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>',
-                                    'url'   => '#products'
-                                ],
-                                [
-                                    'name'  => 'API Gateway',
-                                    'desc'  => 'Enterprise REST API Platform',
-                                    'color' => 'from-emerald-600 to-teal-700',
-                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
-                                    'url'   => '#products'
-                                ],
-                                [
-                                    'name'  => 'BizFlow ERP',
-                                    'desc'  => 'Custom ERP for SMBs',
-                                    'color' => 'from-yellow-600 to-amber-700',
-                                    'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>',
-                                    'url'   => '#products'
-                                ],
-                            ];
-                        }
-                        @endphp
-
                         @foreach($heroProjects as $project)
                         <div class="swiper-slide">
                             <div class="relative h-64 md:h-80 bg-gradient-to-br {{ $project['color'] }} rounded-xl flex flex-col items-center justify-center gap-4 overflow-hidden group">
-                                {{-- Background pattern --}}
-                                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
-                                {{-- Grid lines --}}
-                                <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 40px 40px;"></div>
+                                @if(!empty($project['thumbnail']))
+                                    <img src="@fileUrl($project['thumbnail'])" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $project['name'] }} — AmanProjects" width="640" height="320" loading="eager" fetchpriority="high">
+                                    <div class="absolute inset-0 bg-slate-950/60 group-hover:bg-slate-950/50 transition-colors duration-300"></div>
+                                @else
+                                    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);" aria-hidden="true"></div>
+                                    <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 40px 40px;" aria-hidden="true"></div>
+                                @endif
                                 {{-- Mock browser bar --}}
-                                <div class="absolute top-0 left-0 right-0 h-8 bg-black/30 flex items-center px-4 gap-2">
+                                <div class="absolute top-0 left-0 right-0 h-8 bg-black/30 flex items-center px-4 gap-2 z-10" aria-hidden="true">
                                     <span class="w-3 h-3 rounded-full bg-red-400"></span>
                                     <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
                                     <span class="w-3 h-3 rounded-full bg-green-400"></span>
-                                    <span class="ml-3 text-white/50 text-xs">amanprojects.in/{{ strtolower(str_replace(' ', '-', $project['name'])) }}</span>
+                                    <span class="ml-3 text-white/50 text-xs">{{ url()->current() }}/{{ $project['slug'] ?? strtolower(str_replace(' ', '-', $project['name'])) }}</span>
                                 </div>
                                 {{-- Content --}}
-                                <div class="text-center mt-4">
-                                    <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-xl">
-                                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $project['icon'] !!}</svg>
+                                <div class="text-center mt-4 z-10">
+                                    <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-xl" aria-hidden="true">
+                                        <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">{!! $project['icon'] !!}</svg>
                                     </div>
                                     <h3 class="font-grotesk font-bold text-2xl text-white">{{ $project['name'] }}</h3>
-                                    <p class="text-white/70 text-sm mt-1">{{ $project['desc'] }}</p>
+                                    <p class="text-white/70 text-sm mt-1 px-4">{{ $project['desc'] }}</p>
                                 </div>
                                 {{-- Hover overlay --}}
-                                <a href="{{ $project['url'] ?? '#products' }}" class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <a href="{{ $project['url'] ?? '#products' }}" class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20" aria-label="View {{ $project['name'] }} project">
                                     <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm font-medium">View Project →</span>
                                 </a>
                             </div>
                         </div>
                         @endforeach
                     </div>
+                </div>
                     {{-- Navigation Arrows --}}
                     <div class="swiper-button-prev hero-nav-btn"></div>
                     <div class="swiper-button-next hero-nav-btn"></div>
@@ -384,21 +324,20 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 relative z-10">
                 @php
-                $stats = [
+                $stats = isset($data->stats) && $data->stats->isNotEmpty() ? $data->stats : collect([
                     ['value' => 20, 'suffix' => '+', 'label' => 'Projects Delivered', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
                     ['value' => 10, 'suffix' => '+', 'label' => 'Happy Clients', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
                     ['value' => 3, 'suffix' => '+', 'label' => 'Years Experience', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
                     ['value' => 10, 'suffix' => '+', 'label' => 'Technologies', 'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
-                ];
+                ]);
                 @endphp
-
                 @foreach($stats as $i => $stat)
                 <div class="flex flex-col items-center text-center gap-3 group" data-aos="zoom-in" data-aos-delay="{{ 100 * ($i + 1) }}">
                     <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 transition-all">
                         <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $stat['icon'] }}"/></svg>
                     </div>
                     <div>
-                        <div class="font-grotesk font-bold text-3xl md:text-4xl text-white counter-stat" data-target="{{ $stat['value'] }}">0</div>
+                        <div class="font-grotesk font-bold text-3xl md:text-4xl text-white counter-stat" data-target="{{ $stat['value'] }}">{{ $stat['value'] }}</div>
                         <div class="text-cyan-400 font-bold text-xl -mt-1">{{ $stat['suffix'] }}</div>
                         <div class="text-slate-400 text-sm mt-1">{{ $stat['label'] }}</div>
                     </div>
@@ -414,20 +353,20 @@
 {{-- ======================================================
      ========= SERVICES SECTION =========
 ====================================================== --}}
-<section id="services" class="py-20 relative">
+<section id="services" class="py-20 relative" itemscope itemtype="https://schema.org/Service">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
         {{-- Section Header --}}
         <div class="text-center mb-14" data-aos="fade-up">
-            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">What We Do</span>
-            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Our <span class="gradient-text">Services</span></h2>
-            <p class="text-slate-400 mt-4 text-lg max-w-2xl mx-auto">We deliver end-to-end digital solutions tailored for startups, SMBs, and enterprises — built for performance, security, and scale.</p>
+            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">{{ $data->settings['services_badge'] ?? 'What We Do' }}</span>
+            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white" itemprop="name">{!! \App\Http\Controllers\HomeController::renderHeadline($data->settings['services_title'] ?? 'Our Services') !!}</h2>
+            <p class="text-slate-400 mt-4 text-lg max-w-2xl mx-auto" itemprop="description">{{ $data->settings['services_subtitle'] ?? 'We deliver end-to-end digital solutions tailored for startups, SMBs, and enterprises — built for performance, security, and scale.' }}</p>
         </div>
 
         {{-- Services Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @php
-            $services = [
+            $services = isset($data->services) && $data->services->isNotEmpty() ? $data->services : collect([
                 [
                     'title' => 'Web Development',
                     'desc' => 'Pixel-perfect, performant web apps built with Laravel, React, and modern stacks. From landing pages to full enterprise portals.',
@@ -463,12 +402,13 @@
                     'bg' => 'amber-500',
                     'icon_path' => 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z',
                 ],
-            ];
+            ]);
             @endphp
 
             @foreach($services as $i => $svc)
             <div class="glass-card card-hover p-6 rounded-2xl border border-white/5 transition-all duration-300 group relative overflow-hidden"
-                 data-aos="fade-up" data-aos-delay="{{ 100 + ($i * 80) }}">
+                 data-aos="fade-up" data-aos-delay="{{ 100 + ($i * 80) }}"
+                 itemscope itemtype="https://schema.org/Offer">
                 {{-- Top gradient line --}}
                 <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r {{ $svc['color'] }} opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
@@ -481,11 +421,11 @@
                     </div>
                 </div>
 
-                <h3 class="font-grotesk font-semibold text-xl text-white mb-3 group-hover:text-cyan-300 transition-colors">{{ $svc['title'] }}</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-5">{{ $svc['desc'] }}</p>
-                <a href="#contact" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-3 transition-all group/link">
+                <h3 class="font-grotesk font-semibold text-xl text-white mb-3 group-hover:text-cyan-300 transition-colors" itemprop="name">{{ $svc['title'] }}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-5" itemprop="description">{{ $svc['desc'] }}</p>
+                <a href="#contact" class="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium hover:gap-3 transition-all group/link" aria-label="Learn more about {{ $svc['title'] }}">
                     Learn More
-                    <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
             </div>
             @endforeach
@@ -497,11 +437,11 @@
                     <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div>
-                    <h3 class="font-grotesk font-semibold text-lg text-white mb-2">Need Something Custom?</h3>
-                    <p class="text-slate-400 text-sm">Every great product starts with a conversation. Let's discuss yours.</p>
+                    <h3 class="font-grotesk font-semibold text-lg text-white mb-2">{{ $data->settings['services_cta_title'] ?? 'Need Something Custom?' }}</h3>
+                    <p class="text-slate-400 text-sm">{{ $data->settings['services_cta_desc'] ?? "Every great product starts with a conversation. Let's discuss yours." }}</p>
                 </div>
-                <a href="#contact" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-xl btn-glow transition-all">
-                    Start a Project
+                <a href="{{ $data->settings['services_cta_btn_link'] ?? '#contact' }}" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-electric-500 text-white text-sm font-semibold rounded-xl btn-glow transition-all">
+                    {{ $data->settings['services_cta_btn_text'] ?? 'Start a Project' }}
                 </a>
             </div>
         </div>
@@ -540,10 +480,10 @@
                     ];
                     $icon = $icons[$i % count($icons)];
                 @endphp
-                <div class="glass-card card-hover rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="{{ 100 * ($i + 1) }}">
+                <div class="glass-card card-hover rounded-2xl overflow-hidden border border-white/5 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="{{ 100 * ($i + 1) }}" itemscope itemtype="https://schema.org/SoftwareApplication">
                     <div class="relative h-48 bg-gradient-to-br {{ $color }} overflow-hidden">
                         @if($project->thumbnail_image)
-                            <img src="@fileUrl($project->thumbnail_image)" alt="{{ $project->title }}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500">
+                            <img src="@fileUrl($project->thumbnail_image)" alt="{{ $project->title }} — AmanProjects" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" width="400" height="192" loading="lazy">
                         @else
                             <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
                         @endif
@@ -569,10 +509,10 @@
                     <div class="p-6">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-300 transition-colors">{{ $project->title }}</h3>
+                                <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-300 transition-colors" itemprop="name">{{ $project->title }}</h3>
                             </div>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-5">{{ Str::limit($project->description ?? '', 150) }}</p>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-5" itemprop="description">{{ Str::limit($project->description ?? '', 150) }}</p>
                         @if($project->tech_stack_tags)
                             <div class="flex flex-wrap gap-2 mb-5">
                                 @foreach(explode(',', $project->tech_stack_tags) as $tag)
@@ -605,6 +545,7 @@
 {{-- ======================================================
      ========= HOW WE WORK — PROCESS SECTION =========
 ====================================================== --}}
+@if(isset($data->settings['how_we_work_enabled']) && $data->settings['how_we_work_enabled'] && isset($data->projects) && $data->projects->isNotEmpty())
 <section id="process" class="py-20 relative">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
@@ -616,13 +557,13 @@
         </div>
 
         @php
-        $steps = [
+        $steps = isset($data->steps) && $data->steps->isNotEmpty() ? $data->steps : collect([
             ['num' => '01', 'title' => 'Requirement Analysis', 'desc' => 'We deep-dive into your goals, audience, and technical requirements to create a precise project blueprint.', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'],
             ['num' => '02', 'title' => 'UI/UX Design', 'desc' => 'Our designers craft stunning, user-centric interfaces with wireframes and interactive prototypes for your approval.', 'icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'],
             ['num' => '03', 'title' => 'Development', 'desc' => 'Clean, documented, and scalable code built with best practices. Regular progress updates and milestone reviews.', 'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
             ['num' => '04', 'title' => 'Testing & QA', 'desc' => 'Rigorous testing — unit, integration, security audits, and cross-browser compatibility — before any deployment.', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
             ['num' => '05', 'title' => 'Deployment & Support', 'desc' => 'Smooth server deployment, monitoring setup, and dedicated post-launch support to keep your product running perfectly.', 'icon' => 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01'],
-        ];
+        ]);
         @endphp
 
         {{-- Desktop: Horizontal --}}
@@ -677,50 +618,7 @@
 </section>
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
-
-{{-- ======================================================
-     ========= TECH STACK SECTION =========
-====================================================== --}}
-<section id="tech" class="py-20 relative">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-
-        {{-- Header --}}
-        <div class="text-center mb-14" data-aos="fade-up">
-            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Technologies We Use</span>
-            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Our <span class="gradient-text">Tech Arsenal</span></h2>
-            <p class="text-slate-400 mt-4 text-lg max-w-xl mx-auto">We work with industry-leading technologies to deliver robust, scalable, and secure solutions.</p>
-        </div>
-
-        @php
-        $technologies = [
-            ['name' => 'Laravel', 'color' => 'from-red-500 to-orange-500', 'abbr' => 'L'],
-            ['name' => 'PHP', 'color' => 'from-indigo-500 to-blue-500', 'abbr' => 'PHP'],
-            ['name' => 'MySQL', 'color' => 'from-blue-500 to-cyan-500', 'abbr' => 'SQL'],
-            ['name' => 'Tailwind CSS', 'color' => 'from-teal-500 to-cyan-500', 'abbr' => 'TW'],
-            ['name' => 'Alpine.js', 'color' => 'from-blue-400 to-indigo-500', 'abbr' => 'ALP'],
-            ['name' => 'JavaScript', 'color' => 'from-yellow-400 to-amber-500', 'abbr' => 'JS'],
-            ['name' => 'jQuery', 'color' => 'from-blue-500 to-blue-700', 'abbr' => 'JQ'],
-            ['name' => 'Git', 'color' => 'from-orange-500 to-red-500', 'abbr' => 'GIT'],
-            ['name' => 'REST API', 'color' => 'from-green-500 to-emerald-500', 'abbr' => 'API'],
-            ['name' => 'Linux', 'color' => 'from-slate-500 to-gray-600', 'abbr' => '🐧'],
-        ];
-        @endphp
-
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-            @foreach($technologies as $i => $tech)
-            <div class="glass-card border border-white/5 rounded-xl p-4 flex flex-col items-center gap-3 group hover:border-cyan-500/30 hover:scale-105 transition-all duration-300 cursor-default"
-                 data-aos="zoom-in" data-aos-delay="{{ 50 * $i }}">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br {{ $tech['color'] }} flex items-center justify-center shadow-lg text-white font-grotesk font-bold text-sm group-hover:scale-110 transition-transform">
-                    {{ $tech['abbr'] }}
-                </div>
-                <span class="text-slate-400 text-xs font-medium text-center group-hover:text-white transition-colors">{{ $tech['name'] }}</span>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
+@endif
 
 @if(isset($data->settings['skills_enabled']) && $data->settings['skills_enabled'] && isset($data->skills) && $data->skills->isNotEmpty())
 <section id="skills" class="py-20 relative">
@@ -795,7 +693,7 @@
             {{-- Right: 4 cards --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 @php
-                $whys = [
+                $whys = isset($data->whys) && $data->whys->isNotEmpty() ? $data->whys : collect([
                     [
                         'icon'  => 'M13 10V3L4 14h7v7l9-11h-7z',
                         'title' => 'Fast Delivery',
@@ -820,7 +718,7 @@
                         'desc'  => "We don't disappear after launch. Dedicated support, bug fixes, and updates — always.",
                         'color' => 'from-purple-500 to-indigo-500',
                     ],
-                ];
+                ]);
                 @endphp
 
                 @foreach($whys as $i => $why)
@@ -844,71 +742,6 @@
 
 <div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
 
-@if(isset($data->settings['experience_enabled']) && $data->settings['experience_enabled'] && isset($data->experiences) && $data->experiences->isNotEmpty())
-<section id="experience" class="py-20 relative">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-        <div class="text-center mb-14" data-aos="fade-up">
-            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Journey</span>
-            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">Work <span class="gradient-text">Experience</span></h2>
-        </div>
-
-        <div class="max-w-3xl mx-auto flex flex-col gap-8">
-            @foreach($data->experiences as $i => $experience)
-                <div class="glass-card border border-white/5 hover:border-cyan-500/30 p-6 md:p-8 rounded-2xl transition-all duration-300 relative group" data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 100 }}">
-                    <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-electric-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                        <div>
-                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">{{ $experience->role }}</h3>
-                            <p class="text-cyan-400 text-sm font-medium mt-1">{{ $experience->company }}</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-slate-400 text-sm font-medium bg-white/5 px-3 py-1 rounded-full border border-white/10 self-start md:self-auto">
-                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            {{ $experience->start_date?->format('M Y') ?? '' }} - {{ $experience->end_date ? $experience->end_date->format('M Y') : 'Present' }}
-                        </div>
-                    </div>
-                    @if($experience->description)
-                        <p class="text-slate-400 text-sm leading-relaxed">{{ $experience->description }}</p>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
-@endif
-
-@if(isset($data->settings['education_enabled']) && $data->settings['education_enabled'] && isset($data->educations) && $data->educations->isNotEmpty())
-<section id="education" class="py-20 relative">
-    <div class="max-w-7xl mx-auto px-4 md:px-8">
-        <div class="text-center mb-14" data-aos="fade-up">
-            <span class="inline-block text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-3">Academic Background</span>
-            <h2 class="font-grotesk font-bold text-3xl md:text-4xl lg:text-5xl text-white">My <span class="gradient-text">Education</span></h2>
-        </div>
-
-        <div class="max-w-3xl mx-auto flex flex-col gap-8">
-            @foreach($data->educations as $i => $education)
-                <div class="glass-card border border-white/5 hover:border-cyan-500/30 p-6 md:p-8 rounded-2xl transition-all duration-300 relative group" data-aos="fade-up" data-aos-delay="{{ ($i + 1) * 100 }}">
-                    <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                        <div>
-                            <h3 class="font-grotesk font-bold text-xl text-white group-hover:text-purple-400 transition-colors">{{ $education->degree }}</h3>
-                            <p class="text-purple-400 text-sm font-medium mt-1">{{ $education->institute }}</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-slate-400 text-sm font-medium bg-white/5 px-3 py-1 rounded-full border border-white/10 self-start md:self-auto">
-                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            {{ $education->start_date?->format('M Y') ?? '' }} - {{ $education->end_date ? $education->end_date->format('M Y') : 'Present' }}
-                        </div>
-                    </div>
-                    @if($education->description)
-                        <p class="text-slate-400 text-sm leading-relaxed">{{ $education->description }}</p>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-<div class="section-divider max-w-7xl mx-auto my-2 opacity-20"></div>
-@endif
 
 {{-- ======================================================
      ========= PRICING SECTION =========
@@ -926,7 +759,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
             @php
-            $plans = [
+            $plans = isset($data->plans) && $data->plans->isNotEmpty() ? $data->plans : collect([
                 [
                     'name' => 'Basic',
                     'price' => '₹4,999',
@@ -984,7 +817,7 @@
                         '24/7 Priority Support',
                     ],
                 ],
-            ];
+            ]);
             @endphp
 
             @foreach($plans as $i => $plan)
@@ -1043,7 +876,8 @@
 {{-- ======================================================
      ========= TESTIMONIALS =========
 ====================================================== --}}
-<section id="testimonials" class="py-20 relative">
+<section id="testimonials" class="py-20 relative" itemscope itemtype="https://schema.org/ItemList">
+    <meta itemprop="name" content="Client Testimonials for AmanProjects">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
         {{-- Header --}}
@@ -1057,7 +891,7 @@
             <div class="swiper-wrapper pb-12">
 
                 @php
-                $testimonials = [
+                $testimonials = isset($data->testimonials) && $data->testimonials->isNotEmpty() ? $data->testimonials : collect([
                     [
                         'name' => 'Rajesh Kumar Sharma',
                         'designation' => 'Director, Sunrise Coaching Centre, Patna',
@@ -1090,29 +924,34 @@
                         'rating' => 5,
                         'text' => 'From API design to deployment on AWS — the team handled everything flawlessly. Our API handles 50,000+ daily requests with zero downtime. The post-launch support has been excellent. A trusted partner.',
                     ],
-                ];
+                ]);
                 @endphp
 
                 @foreach($testimonials as $t)
-                <div class="swiper-slide">
+                <div class="swiper-slide" itemscope itemtype="https://schema.org/Review" itemprop="itemListElement">
                     <div class="glass-card border border-white/5 rounded-2xl p-7 mx-2 h-full relative overflow-hidden group hover:border-cyan-500/20 transition-all">
                         {{-- Quote icon --}}
-                        <div class="absolute top-5 right-6 text-6xl text-cyan-500/10 font-grotesk font-bold leading-none select-none">"</div>
+                        <div class="absolute top-5 right-6 text-6xl text-cyan-500/10 font-grotesk font-bold leading-none select-none" aria-hidden="true">"</div>
                         {{-- Stars --}}
-                        <div class="flex gap-1 mb-4">
+                        <div class="flex gap-1 mb-4" aria-label="{{ $t['rating'] }} out of 5 stars">
                             @for($s = 0; $s < $t['rating']; $s++)
-                            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             @endfor
+                            <meta itemprop="reviewRating" content="{{ $t['rating'] }}">
                         </div>
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6 italic relative z-10">"{{ $t['text'] }}"</p>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-6 italic relative z-10" itemprop="reviewBody">"{{ $t['text'] }}"</p>
                         {{-- Author --}}
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-full bg-gradient-to-br {{ $t['color'] }} flex items-center justify-center text-white font-grotesk font-bold text-sm flex-shrink-0 shadow-lg">
-                                {{ $t['avatar'] }}
+                        <div class="flex items-center gap-3" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                            <div class="w-11 h-11 rounded-full bg-gradient-to-br {{ $t['color'] ?? 'from-blue-500 to-cyan-500' }} flex items-center justify-center text-white font-grotesk font-bold text-sm flex-shrink-0 shadow-lg overflow-hidden" aria-hidden="true">
+                                @if($t['avatar'] && (str_starts_with($t['avatar'], 'uploads/') || str_starts_with($t['avatar'], 'storage/') || str_starts_with($t['avatar'], 'http://') || str_starts_with($t['avatar'], 'https://') || str_contains($t['avatar'], '.')))
+                                    <img src="{{ asset($t['avatar']) }}" alt="{{ $t['name'] }}" class="w-full h-full object-cover">
+                                @else
+                                    <span>{{ $t['avatar'] ?: strtoupper(substr($t['name'], 0, 2)) }}</span>
+                                @endif
                             </div>
                             <div>
-                                <div class="font-semibold text-white text-sm">{{ $t['name'] }}</div>
-                                <div class="text-slate-400 text-xs mt-0.5">{{ $t['designation'] }}</div>
+                                <div class="font-semibold text-white text-sm" itemprop="name">{{ $t['name'] }}</div>
+                                <div class="text-slate-400 text-xs mt-0.5" itemprop="jobTitle">{{ $t['designation'] }}</div>
                             </div>
                         </div>
                     </div>
@@ -1227,7 +1066,7 @@
 {{-- ======================================================
      ========= CONTACT SECTION =========
 ====================================================== --}}
-<section id="contact" class="py-20 relative">
+<section id="contact" class="py-20 relative" itemscope itemtype="https://schema.org/ContactPage">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
 
         {{-- Header --}}
@@ -1326,7 +1165,7 @@
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">Email Address</div>
-                                <a href="mailto:{{ $data->profile->email }}" class="text-white font-medium hover:text-cyan-400 transition-colors">{{ $data->profile->email }}</a>
+                                <a href="mailto:{{ $data->profile->email }}" class="text-white font-medium hover:text-cyan-400 transition-colors" itemprop="email">{{ $data->profile->email }}</a>
                             </div>
                         </div>
                         @endif
@@ -1338,7 +1177,7 @@
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">WhatsApp</div>
-                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-white font-medium hover:text-green-400 transition-colors">{{ $data->profile->phone }}</a>
+                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-white font-medium hover:text-green-400 transition-colors" itemprop="telephone">{{ $data->profile->phone }}</a>
                             </div>
                         </div>
                         @endif
@@ -1349,7 +1188,7 @@
                             </div>
                             <div>
                                 <div class="text-slate-400 text-xs mb-0.5">Location</div>
-                                <span class="text-white font-medium">{{ $data->profile?->location ?? 'Bihar, India 🇮🇳' }}</span>
+                                <span class="text-white font-medium">{{ $data->profile?->location ?? 'Saharsa, Bihar, India 🇮🇳' }}</span>
                             </div>
                         </div>
                     </div>
@@ -1396,6 +1235,50 @@
 </section>
 
 {{-- ======================================================
+     ========= HIDDEN FAQ SECTION (AIO — AI Overview Optimization)
+     Visible only to crawlers/screen-readers, not to users
+====================================================== --}}
+<section aria-label="Frequently Asked Questions" class="sr-only" itemscope itemtype="https://schema.org/FAQPage">
+    <h2>Frequently Asked Questions about AmanProjects</h2>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What services does AmanProjects offer?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">AmanProjects offers custom software development, SaaS platform development, ethical hacking & cybersecurity audits, RESTful & GraphQL API development, and custom ERP/CRM solutions for startups and enterprises across India.</p>
+        </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Is AmanProjects based in Saharsa, Bihar, India?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">Yes. AmanProjects is a software company proudly based in Saharsa, Bihar, India. We serve clients across India and globally, delivering premium digital products remotely.</p>
+        </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What technologies does AmanProjects use?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">We specialize in Laravel (PHP), React, Node.js, MySQL, REST APIs, and cloud infrastructure on AWS and DigitalOcean. We follow security-first development practices compliant with OWASP standards.</p>
+        </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">How much does a web application cost at AmanProjects?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">Pricing starts at ₹4,999/month for basic web applications. SaaS platforms and enterprise software are priced per project. Contact us for a free custom quote.</p>
+        </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Does AmanProjects provide cybersecurity services?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">Yes. We provide professional penetration testing, OWASP-based security audits, vulnerability assessments, and security consulting for web applications and APIs.</p>
+        </div>
+    </div>
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">How can I contact AmanProjects?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p itemprop="text">You can reach AmanProjects via the contact form on our website, by email, or on WhatsApp. We typically respond within 1 hour during business hours (Mon–Fri, 9 AM–7 PM IST).</p>
+        </div>
+    </div>
+</section>
+
+{{-- ======================================================
      ========= FOOTER =========
 ====================================================== --}}
 <footer class="relative border-t border-white/5 pt-16 pb-8" style="background: rgba(2,8,23,0.9);">
@@ -1408,13 +1291,23 @@
             {{-- Brand Column --}}
             <div class="col-span-2 md:col-span-4 lg:col-span-2">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 mb-4">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                        <span class="text-white font-grotesk font-bold text-sm">AP</span>
-                    </div>
-                    <span class="font-grotesk font-bold text-xl text-white">Aman<span class="text-cyan-400">Projects</span><span class="text-cyan-500">.</span></span>
+                    @if(!empty($data->settings['logo']))
+                        <img src="@fileUrl($data->settings['logo'])" alt="{{ $siteName }}" class="h-9 w-auto max-w-[180px] object-contain transition-all duration-200">
+                    @else
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-electric-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                            <span class="text-white font-grotesk font-bold text-sm">
+                                @if(isset($firstWord[0]) && isset($secondWord[0]))
+                                    {{ strtoupper($firstWord[0] . $secondWord[0]) }}
+                                @else
+                                    {{ strtoupper(substr($siteName, 0, 2)) }}
+                                @endif
+                            </span>
+                        </div>
+                        <span class="font-grotesk font-bold text-xl text-white">{{ $firstWord }}<span class="text-cyan-400">{{ $secondWord }}</span><span class="text-cyan-500 ml-0.5">.</span></span>
+                    @endif
                 </a>
                 <p class="text-slate-400 text-sm leading-relaxed mb-5 max-w-xs">
-                    Building digital excellence from Bihar, India. Custom software, SaaS products, and cybersecurity solutions for businesses across India and beyond.
+                    Building digital excellence from Saharsa, Bihar, India. Custom software, SaaS products, and cybersecurity solutions for businesses across India and beyond.
                 </p>
                 {{-- Social Icons --}}
                 <div class="flex items-center gap-3">
@@ -1543,12 +1436,12 @@
         {{-- Bottom bar --}}
         <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
             <p class="text-slate-500 text-sm text-center md:text-left">
-                &copy; {{ date('Y') }} <span class="text-slate-400 font-medium">AmanProjects</span>. All rights reserved.
+                &copy; {{ date('Y') }} <span class="text-slate-400 font-medium">{{ $siteName }}</span>. All rights reserved.
             </p>
             <p class="text-slate-500 text-sm flex items-center gap-1">
                 Made with
                 <svg class="w-4 h-4 text-red-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
-                in <span class="text-orange-400 font-medium">Bihar, India 🇮🇳</span>
+                in <span class="text-orange-400 font-medium">Saharsa, Bihar, India 🇮🇳</span>
             </p>
         </div>
     </div>

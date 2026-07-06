@@ -15,6 +15,7 @@ class SettingController extends Controller
     public function edit(): View
     {
         $settings = Setting::getMany([
+            'site_name' => '',
             'site_title' => '',
             'meta_description' => '',
             'meta_keywords' => '',
@@ -26,10 +27,14 @@ class SettingController extends Controller
             'about_enabled' => true,
             'skills_enabled' => true,
             'projects_enabled' => true,
-            'experience_enabled' => true,
-            'education_enabled' => true,
+            'how_we_work_enabled' => true,
             'blog_enabled' => true,
             'contact_enabled' => true,
+            'local_business_address' => '',
+            'local_business_phone' => '',
+            'local_business_email' => '',
+            'local_business_lat' => '',
+            'local_business_lng' => '',
         ]);
 
         return view('admin.settings.edit', compact('settings'));
@@ -41,10 +46,13 @@ class SettingController extends Controller
 
         if ($request->hasFile('favicon')) {
             try {
-                $data['favicon'] = $this->uploadFile(
+                $oldFavicon = Setting::get('favicon');
+                if ($oldFavicon) {
+                    $this->deleteFile($oldFavicon);
+                }
+                $data['favicon'] = \App\Helpers\FileHelper::uploadPublicPath(
                     $request->file('favicon'),
-                    'misc',
-                    Setting::get('favicon')
+                    'uploads/icons'
                 );
             } catch (\Exception $e) {
                 return back()->withErrors(['favicon' => $e->getMessage()]);
@@ -53,10 +61,13 @@ class SettingController extends Controller
 
         if ($request->hasFile('logo')) {
             try {
-                $data['logo'] = $this->uploadFile(
+                $oldLogo = Setting::get('logo');
+                if ($oldLogo) {
+                    $this->deleteFile($oldLogo);
+                }
+                $data['logo'] = \App\Helpers\FileHelper::uploadPublicPath(
                     $request->file('logo'),
-                    'misc',
-                    Setting::get('logo')
+                    'uploads/icons'
                 );
             } catch (\Exception $e) {
                 return back()->withErrors(['logo' => $e->getMessage()]);
@@ -70,5 +81,19 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Settings updated successfully.');
+    }
+
+    public function flushCache(): RedirectResponse
+    {
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        
+        // Also call our specific home cache flusher just in case we switch cache drivers
+        if (class_exists(\App\Http\Controllers\HomeController::class)) {
+            \App\Http\Controllers\HomeController::flushCache();
+        }
+
+        return back()->with('success', 'Application cache flushed successfully!');
     }
 }

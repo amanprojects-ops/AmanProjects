@@ -27,7 +27,7 @@ class DemoDataSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => 'admin@amanprojects.com'],
             [
-                'name' => 'Aman Gupta',
+                'name' => 'Aman Yadav',
                 'password' => Hash::make('Admin@1234'),
                 'email_verified_at' => now(),
             ]
@@ -118,68 +118,6 @@ class DemoDataSeeder extends Seeder
             Skill::updateOrCreate(
                 ['name' => $skill['name']],
                 $skill
-            );
-        }
-
-        // 5. Experiences
-        $experiences = [
-            [
-                'company' => 'TechSolutions Pvt. Ltd.',
-                'role' => 'Senior Full Stack Developer',
-                'start_date' => '2024-06-01',
-                'end_date' => null, // Current job
-                'description' => 'Lead development of core web applications using Laravel and React. Managed database optimization, API integrations, and CI/CD deployment pipelines on AWS. Mentored junior developers.',
-                'order' => 1,
-            ],
-            [
-                'company' => 'Global Web Agency',
-                'role' => 'Web Developer',
-                'start_date' => '2022-03-01',
-                'end_date' => '2024-05-31',
-                'description' => 'Developed custom e-commerce stores, content management systems, and corporate portals. Worked closely with designers to build fully responsive frontend user interfaces using modern CSS frameworks.',
-                'order' => 2,
-            ],
-            [
-                'company' => 'Innovate Tech Startup',
-                'role' => 'Junior Software Engineer',
-                'start_date' => '2021-01-15',
-                'end_date' => '2022-02-28',
-                'description' => 'Assisted in building RESTful APIs using Node.js/Express and PHP. Maintained database schemas, resolved bugs, and participated in agile daily standups and code reviews.',
-                'order' => 3,
-            ],
-        ];
-
-        foreach ($experiences as $exp) {
-            Experience::updateOrCreate(
-                ['company' => $exp['company'], 'role' => $exp['role']],
-                $exp
-            );
-        }
-
-        // 6. Educations
-        $educations = [
-            [
-                'institute' => 'Delhi Technological University',
-                'degree' => 'Master of Computer Applications (MCA)',
-                'start_date' => '2019-07-01',
-                'end_date' => '2021-06-30',
-                'description' => 'Specialized in Software Engineering and Database Management Systems. Graduated with First Class Distinction.',
-                'order' => 1,
-            ],
-            [
-                'institute' => 'University of Delhi',
-                'degree' => 'Bachelor of Science (B.Sc.) in Computer Science',
-                'start_date' => '2016-07-01',
-                'end_date' => '2019-06-30',
-                'description' => 'Acquired strong foundation in algorithms, data structures, and object-oriented programming concepts.',
-                'order' => 2,
-            ],
-        ];
-
-        foreach ($educations as $edu) {
-            Education::updateOrCreate(
-                ['institute' => $edu['institute'], 'degree' => $edu['degree']],
-                $edu
             );
         }
 
@@ -351,6 +289,184 @@ class DemoDataSeeder extends Seeder
                 ['email' => $contact['email'], 'subject' => $contact['subject']],
                 $contact
             );
+        }
+
+        // 11. Stats
+        $stats = [
+            ['value' => 20, 'suffix' => '+', 'label' => 'Projects Delivered', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+            ['value' => 10, 'suffix' => '+', 'label' => 'Happy Clients', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
+            ['value' => 3, 'suffix' => '+', 'label' => 'Years Experience', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+            ['value' => 10, 'suffix' => '+', 'label' => 'Technologies', 'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
+        ];
+        foreach ($stats as $stat) {
+            \App\Models\Stat::updateOrCreate(['label' => $stat['label']], $stat);
+        }
+
+        // 12. Services
+        $services = [
+            [
+                'title' => 'Web Development',
+                'desc' => 'Pixel-perfect, performant web apps built with Laravel, React, and modern stacks. From landing pages to full enterprise portals.',
+                'color' => 'from-blue-500 to-cyan-500',
+                'bg' => 'blue-500',
+                'icon_path' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+            ],
+            [
+                'title' => 'SaaS Development',
+                'desc' => 'Multi-tenant SaaS platforms with subscription billing, user management, and cloud-ready infrastructure.',
+                'color' => 'from-purple-500 to-pink-500',
+                'bg' => 'purple-500',
+                'icon_path' => 'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z',
+            ],
+            [
+                'title' => 'Ethical Hacking & Security',
+                'desc' => 'Professional penetration testing, security audits, and vulnerability assessments to protect your digital assets.',
+                'color' => 'from-red-500 to-orange-500',
+                'bg' => 'red-500',
+                'icon_path' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+            ],
+            [
+                'title' => 'API Development & Integration',
+                'desc' => 'RESTful & GraphQL APIs, third-party integrations (payment gateways, SMS, CRMs), and microservices architecture.',
+                'color' => 'from-emerald-500 to-teal-500',
+                'bg' => 'emerald-500',
+                'icon_path' => 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+            ],
+            [
+                'title' => 'Custom Software Solutions',
+                'desc' => 'Bespoke ERP, CRM, and business automation tools engineered specifically for your operational workflow.',
+                'color' => 'from-amber-500 to-yellow-500',
+                'bg' => 'amber-500',
+                'icon_path' => 'M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z',
+            ],
+        ];
+        foreach ($services as $service) {
+            \App\Models\Service::updateOrCreate(['title' => $service['title']], $service);
+        }
+
+        // 13. Plans
+        $plans = [
+            [
+                'name' => 'Basic',
+                'price' => '₹4,999',
+                'period' => '/month',
+                'desc' => 'Perfect for startups and small businesses getting started.',
+                'color' => 'border-white/10',
+                'btn_style' => 'border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10',
+                'featured' => false,
+                'features' => [
+                    '1 Web Application', 'Up to 5 Pages', 'Basic SEO Setup', 'Mobile Responsive', 'SSL Certificate', '1 Month Support', '❌ Custom Integrations', '❌ Priority Support'
+                ],
+            ],
+            [
+                'name' => 'Standard',
+                'price' => '₹9,999',
+                'period' => '/month',
+                'desc' => 'The most popular choice for growing businesses.',
+                'color' => 'border-cyan-500/50',
+                'btn_style' => 'bg-gradient-to-r from-cyan-500 to-electric-500 text-white btn-glow',
+                'featured' => true,
+                'features' => [
+                    'Up to 3 Web Applications', 'Unlimited Pages', 'Advanced SEO + Analytics', 'Custom API Integrations', 'Payment Gateway Setup', '3 Months Priority Support', 'Admin Dashboard', 'Monthly Maintenance'
+                ],
+            ],
+            [
+                'name' => 'Pro',
+                'price' => '₹24,999',
+                'period' => '/month',
+                'desc' => 'Enterprise-grade solutions for established companies.',
+                'color' => 'border-white/10',
+                'btn_style' => 'border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10',
+                'featured' => false,
+                'features' => [
+                    'Full SaaS Platform', 'Multi-tenant Architecture', 'Custom Mobile App', 'Security Audit Included', 'Dedicated Developer', '12 Months Support', 'DevOps & CI/CD Setup', '24/7 Priority Support'
+                ],
+            ],
+        ];
+        foreach ($plans as $plan) {
+            \App\Models\Plan::updateOrCreate(['name' => $plan['name']], $plan);
+        }
+
+        // 14. Testimonials
+        $testimonials = [
+            [
+                'name' => 'Rajesh Kumar Sharma',
+                'designation' => 'Director, Sunrise Coaching Centre, Patna',
+                'avatar' => 'RK',
+                'color' => 'from-blue-500 to-cyan-500',
+                'rating' => 5,
+                'text' => 'AP Coaching SaaS transformed how we manage our institute. The fee collection and attendance modules alone saved us 3 hours daily. Aman\'s team was responsive and delivered exactly what we asked for — and more.',
+            ],
+            [
+                'name' => 'Priya Mishra',
+                'designation' => 'Founder, StudyHub Library, Muzaffarpur',
+                'avatar' => 'PM',
+                'color' => 'from-purple-500 to-indigo-500',
+                'rating' => 5,
+                'text' => 'The AP Library system is fantastic. Our members love the online seat booking feature. No more queues, no more confusion. The QR check-in is super smooth. Highly recommend AmanProjects!',
+            ],
+            [
+                'name' => 'Amit Sinha',
+                'designation' => 'CEO, TechRetail Solutions, Delhi',
+                'avatar' => 'AS',
+                'color' => 'from-emerald-500 to-teal-500',
+                'rating' => 5,
+                'text' => 'We hired AmanProjects for a complete ERP integration project. The code quality was exceptional — well-documented, scalable, and secure. The security audit they performed caught 3 critical vulnerabilities. Worth every rupee!',
+            ],
+            [
+                'name' => 'Neha Gupta',
+                'designation' => 'Product Manager, FinTech Startup, Bangalore',
+                'avatar' => 'NG',
+                'color' => 'from-rose-500 to-pink-500',
+                'rating' => 5,
+                'text' => 'From API design to deployment on AWS — the team handled everything flawlessly. Our API handles 50,000+ daily requests with zero downtime. The post-launch support has been excellent. A trusted partner.',
+            ],
+        ];
+        foreach ($testimonials as $testimonial) {
+            \App\Models\Testimonial::updateOrCreate(['name' => $testimonial['name']], $testimonial);
+        }
+
+        // 15. Why Choose Us
+        $whys = [
+            [
+                'icon'  => 'M13 10V3L4 14h7v7l9-11h-7z',
+                'title' => 'Fast Delivery',
+                'desc'  => 'Agile sprints and efficient workflows ensure your project ships on time — always.',
+                'color' => 'from-yellow-500 to-amber-500',
+            ],
+            [
+                'icon'  => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+                'title' => 'Clean & Scalable Code',
+                'desc'  => 'SOLID principles, proper documentation, and future-proof architecture as standard.',
+                'color' => 'from-green-500 to-emerald-500',
+            ],
+            [
+                'icon'  => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                'title' => 'Security-First',
+                'desc'  => 'Every product is built with security at its core — OWASP compliance, input validation, and encryption.',
+                'color' => 'from-red-500 to-rose-500',
+            ],
+            [
+                'icon'  => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z',
+                'title' => 'Ongoing Support',
+                'desc'  => "We don't disappear after launch. Dedicated support, bug fixes, and updates — always.",
+                'color' => 'from-purple-500 to-indigo-500',
+            ],
+        ];
+        foreach ($whys as $why) {
+            \App\Models\WhyChooseUs::updateOrCreate(['title' => $why['title']], $why);
+        }
+
+        // 16. Process Steps
+        $steps = [
+            ['num' => '01', 'title' => 'Requirement Analysis', 'desc' => 'We deep-dive into your goals, audience, and technical requirements to create a precise project blueprint.', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'],
+            ['num' => '02', 'title' => 'UI/UX Design', 'desc' => 'Our designers craft stunning, user-centric interfaces with wireframes and interactive prototypes for your approval.', 'icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'],
+            ['num' => '03', 'title' => 'Development', 'desc' => 'Clean, documented, and scalable code built with best practices. Regular progress updates and milestone reviews.', 'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'],
+            ['num' => '04', 'title' => 'Testing & QA', 'desc' => 'Rigorous testing — unit, integration, security audits, and cross-browser compatibility — before any deployment.', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+            ['num' => '05', 'title' => 'Deployment & Support', 'desc' => 'Smooth server deployment, monitoring setup, and dedicated post-launch support to keep your product running perfectly.', 'icon' => 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01'],
+        ];
+        foreach ($steps as $step) {
+            \App\Models\ProcessStep::updateOrCreate(['title' => $step['title']], $step);
         }
     }
 }

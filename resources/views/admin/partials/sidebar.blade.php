@@ -1,68 +1,95 @@
-<aside class="w-64 bg-gray-800 text-white min-h-screen hidden lg:block">
-    <div class="p-4 border-b border-gray-700">
-        <h1 class="text-xl font-bold">Admin Panel</h1>
-    </div>
-    <nav class="p-4 space-y-2">
-        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-gauge" aria-hidden="true"></i> Dashboard
-        </a>
-        <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.profile.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-user" aria-hidden="true"></i> Profile
-        </a>
-        <a href="{{ route('admin.social-links.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.social-links.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Social Links
-        </a>
-        <a href="{{ route('admin.skills.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.skills.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-code" aria-hidden="true"></i> Skills
-        </a>
-        <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Projects
-        </a>
-        <a href="{{ route('admin.experiences.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.experiences.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-briefcase" aria-hidden="true"></i> Experience
-        </a>
-        <a href="{{ route('admin.educations.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.educations.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Education
-        </a>
-        <a href="{{ route('admin.posts.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.posts.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-newspaper" aria-hidden="true"></i> Blog Posts
-        </a>
-        <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-folder" aria-hidden="true"></i> Categories
-        </a>
-        <a href="{{ route('admin.contacts.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.contacts.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-envelope" aria-hidden="true"></i> Contacts
-        </a>
-        @if(auth()->user()?->isAdmin())
-        <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 rounded hover:bg-gray-700 {{ request()->routeIs('admin.settings.*') ? 'bg-gray-700' : '' }}">
-            <i class="fa-solid fa-gear" aria-hidden="true"></i> Settings
-        </a>
-        @endif
-    </nav>
-</aside>
+<aside id="adminSidebar">
 
-<!-- Mobile sidebar -->
-<div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-40 lg:hidden">
-    <div class="fixed inset-0 bg-black opacity-50" @click="sidebarOpen = false"></div>
-    <aside class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white z-50">
-        <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-            <h1 class="text-xl font-bold">Admin Panel</h1>
-            <button @click="sidebarOpen = false" class="text-white">&times;</button>
+    {{-- Brand Header --}}
+    <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
+        @if(!empty($settings['logo']))
+            <img src="@fileUrl($settings['logo'])" alt="{{ $settings['site_name'] ?? 'Logo' }}" style="max-height: 38px; border-radius: 8px;">
+        @else
+            <div class="brand-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+        @endif
+        <div class="brand-text">
+            <span class="brand-title">{{ $settings['site_name'] ?? 'Admin Panel' }}</span>
+            <span class="brand-sub">Control Center</span>
         </div>
-        <nav class="p-4 space-y-2">
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-gauge" aria-hidden="true"></i> Dashboard</a>
-            <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-user" aria-hidden="true"></i> Profile</a>
-            <a href="{{ route('admin.social-links.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Social Links</a>
-            <a href="{{ route('admin.skills.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-code" aria-hidden="true"></i> Skills</a>
-            <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Projects</a>
-            <a href="{{ route('admin.experiences.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-briefcase" aria-hidden="true"></i> Experience</a>
-            <a href="{{ route('admin.educations.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Education</a>
-            <a href="{{ route('admin.posts.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Blog Posts</a>
-            <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-folder" aria-hidden="true"></i> Categories</a>
-            <a href="{{ route('admin.contacts.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Contacts</a>
-            @if(auth()->user()?->isAdmin())
-            <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 rounded hover:bg-gray-700"><i class="fa-solid fa-gear" aria-hidden="true"></i> Settings</a>
-            @endif
-        </nav>
-    </aside>
-</div>
+    </a>
+
+    {{-- Navigation --}}
+    <nav class="sidebar-nav">
+
+        <div class="nav-section-label">Overview</div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="nav-section-label">Content Management</div>
+        
+        <div class="nav-item">
+            <a href="{{ route('admin.projects.index') }}" class="{{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-diagram-project"></i></span>
+                Projects
+            </a>
+        </div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.frontend-manage') }}" class="{{ request()->routeIs('admin.frontend-manage', 'admin.hero-settings.*', 'admin.services-settings.*', 'admin.stats.*', 'admin.services.*', 'admin.plans.*', 'admin.testimonials.*', 'admin.why-choose-uses.*', 'admin.process-steps.*', 'admin.skills.*', 'admin.albums.*', 'admin.social-links.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-laptop-code"></i></span>
+                Manage Frontend
+            </a>
+        </div>
+
+        <div class="nav-section-label">Blog</div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.posts.index') }}" class="{{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-newspaper"></i></span>
+                Blog Posts
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-folder-open"></i></span>
+                Categories
+            </a>
+        </div>
+
+        <div class="nav-section-label">Communication</div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-envelope"></i></span>
+                Messages
+            </a>
+        </div>
+
+        @if(auth()->user()?->isAdmin())
+        <div class="nav-section-label">System</div>
+        <div class="nav-item">
+            <a href="{{ route('admin.settings.edit') }}" class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
+                Settings
+            </a>
+        </div>
+        @endif
+
+    </nav>
+
+    {{-- Sidebar Footer --}}
+    <div class="sidebar-footer">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-100" style="display:flex;align-items:center;gap:12px;padding:9px 14px;border-radius:10px;color:rgba(255,255,255,0.6);background:transparent;border:none;cursor:pointer;font-size:13.5px;font-weight:500;transition:all 0.18s;width:100%;" onmouseover="this.style.background='rgba(239,68,68,0.12)';this.style.color='#f87171'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,0.6)'">
+                <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(239,68,68,0.1);font-size:13px;flex-shrink:0;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </span>
+                Sign Out
+            </button>
+        </form>
+    </div>
+
+</aside>

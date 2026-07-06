@@ -12,6 +12,13 @@ class FileHelper
         return $file->store($folder, 'public');
     }
 
+    public static function uploadPublicPath(UploadedFile $file, string $folder): string
+    {
+        $filename = $file->getClientOriginalName();
+        $file->move(public_path($folder), $filename);
+        return $folder . '/' . $filename;
+    }
+
     public static function delete(?string $path): void
     {
         if ($path && Storage::disk('public')->exists($path)) {

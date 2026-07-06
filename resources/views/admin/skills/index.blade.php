@@ -1,57 +1,83 @@
 @extends('layouts.admin')
 
 @section('title', 'Skills')
+@section('page_title', '<span>Skills</span>')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Skills</h1>
-    <a href="{{ route('admin.skills.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add Skill</a>
+<div class="page-header">
+    <h1 class="page-title">
+        <span class="title-icon"><i class="fa-solid fa-code"></i></span>
+        Skills
+    </h1>
+    <a href="{{ route('admin.skills.create') }}" class="btn-admin-primary">
+        <i class="fa-solid fa-plus"></i> Add Skill
+    </a>
 </div>
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Level</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Visible</th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @forelse($skills as $skill)
+<div class="admin-card">
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $skill->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $skill->category ?: '-' }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <div class="w-24 bg-gray-200 rounded-full h-2 mr-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $skill->level }}%"></div>
+                    <th>Skill Name</th>
+                    <th>Category</th>
+                    <th>Proficiency</th>
+                    <th>Visible</th>
+                    <th style="text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($skills as $skill)
+                    <tr>
+                        <td style="font-weight:600;color:#1e293b;">{{ $skill->name }}</td>
+                        <td>
+                            @if($skill->category)
+                                <span style="background:#ede9fe;color:#6d28d9;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600;">{{ $skill->category }}</span>
+                            @else
+                                <span style="color:#94a3b8;">—</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <div class="skill-bar">
+                                    <div class="skill-bar-fill" style="width:{{ $skill->level }}%"></div>
+                                </div>
+                                <span style="font-size:12.5px;font-weight:700;color:#6366f1;min-width:34px;">{{ $skill->level }}%</span>
                             </div>
-                            <span>{{ $skill->level }}%</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded {{ $skill->show ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                            {{ $skill->show ? 'Yes' : 'No' }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                        <a href="{{ route('admin.skills.edit', $skill) }}" class="text-blue-600 hover:underline mr-3"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</a>
-                        <form action="{{ route('admin.skills.destroy', $skill) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline"><i class="fa-solid fa-trash" aria-hidden="true"></i> Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">No skills found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                        </td>
+                        <td>
+                            <span class="status-badge {{ $skill->show ? 'active' : 'inactive' }}">
+                                <i class="fa-solid fa-circle" style="font-size:6px;"></i>
+                                {{ $skill->show ? 'Visible' : 'Hidden' }}
+                            </span>
+                        </td>
+                        <td style="text-align:right;white-space:nowrap;">
+                            <div style="display:inline-flex;gap:6px;">
+                                <a href="{{ route('admin.skills.edit', $skill) }}" class="btn-admin-edit">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.skills.destroy', $skill) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this skill?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-admin-delete">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-code"></i>
+                                <p>No skills added yet.</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

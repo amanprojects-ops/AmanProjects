@@ -22,10 +22,14 @@ class SettingSeeder extends Seeder
             'about_enabled' => '1',
             'skills_enabled' => '1',
             'projects_enabled' => '1',
-            'experience_enabled' => '1',
-            'education_enabled' => '1',
+            'how_we_work_enabled' => '1',
             'blog_enabled' => '1',
             'contact_enabled' => '1',
+            'stats_enabled' => '1',
+            'services_enabled' => '1',
+            'pricing_enabled' => '1',
+            'testimonials_enabled' => '1',
+            'why_us_enabled' => '1',
         ];
 
         foreach ($settings as $key => $value) {

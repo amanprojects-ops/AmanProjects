@@ -1,68 +1,168 @@
-<div class="space-y-6 mb-6">
-    <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-        <input type="text" name="title" id="title" value="{{ old('title', $post->title ?? '') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-        @error('title')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-    </div>
+<div class="form-layout" style="display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:8px;align-items:start;">
 
-    <div>
-        <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-        <input type="text" name="slug" id="slug" value="{{ old('slug', $post->slug ?? '') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-        @error('slug')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-    </div>
+    <!-- Left Column -->
+    <div style="display:grid;gap:24px;">
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3><i class="fa-solid fa-align-left" style="color:#6366f1;"></i> Post Content</h3>
+            </div>
+            <div class="form-section-body" style="display:grid;gap:16px;">
 
-    <div>
-        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-        <textarea name="content" id="content" rows="10" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('content', $post->content ?? '') }}</textarea>
-        @error('content')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-    </div>
+                <div>
+                    <label for="title" class="form-label-custom">Title <span style="color:#ef4444;">*</span></label>
+                    <input type="text" name="title" id="title" value="{{ old('title', $post->title ?? '') }}" required
+                        class="form-control-custom" placeholder="Enter post title…">
+                    @error('title')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
 
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-            <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $post->meta_title ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            @error('meta_title')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                <div>
+                    <label for="slug" class="form-label-custom">Slug <span style="color:#ef4444;">*</span></label>
+                    <input type="text" name="slug" id="slug" value="{{ old('slug', $post->slug ?? '') }}" required
+                        class="form-control-custom" placeholder="post-url-slug">
+                    @error('slug')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label for="content" class="form-label-custom">Content <span style="color:#ef4444;">*</span></label>
+                    <textarea name="content" id="content" rows="12" required
+                        class="form-control-custom" style="resize:vertical;">{{ old('content', $post->content ?? '') }}</textarea>
+                    @error('content')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+            </div>
         </div>
-        <div>
-            <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-            <input type="text" name="meta_description" id="meta_description" value="{{ old('meta_description', $post->meta_description ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            @error('meta_description')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-        </div>
-    </div>
 
-    <div>
-        <label for="featured_image" class="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
-        @if(isset($post) && $post->featured_image)
-            <img src="@fileUrl($post->featured_image)" alt="" class="w-32 h-24 object-cover rounded mb-2">
-        @endif
-        <input type="file" name="featured_image" id="featured_image" accept="image/*" class="w-full">
-        @error('featured_image')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-    </div>
-
-    <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
-        <div class="flex flex-wrap gap-2">
-            @foreach($categories as $category)
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{ in_array($category->id, old('categories', isset($post) ? $post->categories->pluck('id')->toArray() : [])) ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <span class="ml-2 text-sm text-gray-700">{{ $category->name }}</span>
-                </label>
-            @endforeach
-        </div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select name="status" id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                <option value="draft" {{ old('status', $post->status ?? 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
-                <option value="published" {{ old('status', $post->status ?? '') === 'published' ? 'selected' : '' }}>Published</option>
-            </select>
-        </div>
-        <div>
-            <label for="published_at" class="block text-sm font-medium text-gray-700 mb-1">Publish Date</label>
-            <input type="datetime-local" name="published_at" id="published_at" value="{{ old('published_at', isset($post) && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            @error('published_at')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3><i class="fa-solid fa-magnifying-glass" style="color:#6366f1;"></i> SEO Meta</h3>
+            </div>
+            <div class="form-section-body" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div>
+                    <label for="meta_title" class="form-label-custom">Meta Title</label>
+                    <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $post->meta_title ?? '') }}"
+                        class="form-control-custom" placeholder="SEO title…">
+                    @error('meta_title')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label for="meta_description" class="form-label-custom">Meta Description</label>
+                    <input type="text" name="meta_description" id="meta_description" value="{{ old('meta_description', $post->meta_description ?? '') }}"
+                        class="form-control-custom" placeholder="Short SEO description…">
+                    @error('meta_description')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Right Column -->
+    <div style="display:grid;gap:24px;">
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3><i class="fa-solid fa-image" style="color:#6366f1;"></i> Featured Image</h3>
+            </div>
+            <div class="form-section-body">
+                @if(isset($post) && $post->featured_image)
+                    <div id="current-thumbnail-container" style="margin-bottom:14px;">
+                        <img src="@fileUrl($post->featured_image)" alt="Current Image" style="width:100%;height:auto;max-height:200px;object-fit:cover;border-radius:10px;border:2px solid #e2e8f0;">
+                        <p style="font-size:12px;color:#94a3b8;margin-top:6px;">Current image</p>
+                    </div>
+                @endif
+                <div id="image-preview-container" style="display:none; margin-bottom:14px;">
+                    <img id="image-preview" src="#" alt="New image preview" style="width:100%;height:auto;max-height:200px;object-fit:cover;border-radius:10px;border:2px solid #6366f1;">
+                    <p style="font-size:12px;color:#6366f1;margin-top:6px;font-weight:500;">New image preview</p>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" name="featured_image" id="featured_image" accept="image/*" onchange="previewImage(event)">
+                    <div class="file-input-label">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div>
+                            <p style="margin:0;font-weight:600;color:#334155;font-size:13.5px;">Click to upload image</p>
+                            <p style="margin:0;font-size:12px;color:#94a3b8;">PNG, JPG, WebP up to 5MB</p>
+                        </div>
+                    </div>
+                </div>
+                @error('featured_image')<p class="form-error">{{ $message }}</p>@enderror
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3><i class="fa-solid fa-folder-open" style="color:#6366f1;"></i> Categories</h3>
+            </div>
+            <div class="form-section-body">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                    @foreach($categories as $category)
+                        <label style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;cursor:pointer;transition:all 0.15s;font-size:13.5px;font-weight:500;color:#334155;" class="category-check-label">
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                {{ in_array($category->id, old('categories', isset($post) ? $post->categories->pluck('id')->toArray() : [])) ? 'checked' : '' }}
+                                style="accent-color:#6366f1;width:14px;height:14px;">
+                            {{ $category->name }}
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3><i class="fa-solid fa-sliders" style="color:#6366f1;"></i> Publishing</h3>
+            </div>
+            <div class="form-section-body" style="display:grid;grid-template-columns:1fr;gap:16px;">
+                <div>
+                    <label for="status" class="form-label-custom">Status</label>
+                    <select name="status" id="status" class="form-control-custom">
+                        <option value="draft" {{ old('status', $post->status ?? 'draft') === 'draft' ? 'selected' : '' }}>📝 Draft</option>
+                        <option value="published" {{ old('status', $post->status ?? '') === 'published' ? 'selected' : '' }}>🚀 Published</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="published_at" class="form-label-custom">Publish Date</label>
+                    <input type="datetime-local" name="published_at" id="published_at"
+                        value="{{ old('published_at', isset($post) && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}"
+                        class="form-control-custom">
+                    @error('published_at')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<style>
+    @media (max-width: 1024px) {
+        .form-layout {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    .category-check-label:has(input:checked) {
+        background: #ede9fe !important; border-color: #6366f1 !important; color: #4c1d95 !important;
+    }
+</style>
+
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImage = document.getElementById('image-preview');
+        const currentContainer = document.getElementById('current-thumbnail-container');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+                
+                if (currentContainer) {
+                    currentContainer.style.display = 'none';
+                }
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewContainer.style.display = 'none';
+            if (currentContainer) {
+                currentContainer.style.display = 'block';
+            }
+        }
+    }
+</script>
