@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150x150.png?text=AmanProjects+Logo" alt="AmanProjects Logo" width="150" height="150" />
+  <img src="https://via.placeholder.com/150x150.png?text=AmanProjects" alt="AmanProjects Logo" width="150" height="150" />
   <h1>AmanProjects CMS & Portfolio Platform</h1>
   <p><em>Built for Performance, Security, and SEO by <a href="https://amanprojects.com">Technical Aman</a></em></p>
   
@@ -61,8 +61,8 @@ Follow these steps to set up the AmanProjects CMS locally or on your server.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/amanprojects-ops/amanbhai_portfolio.git
-cd amanbhai_portfolio
+git clone https://github.com/amanprojects-ops/AmanProjects.git
+cd AmanProjects
 ```
 
 ### 2. Install Dependencies
