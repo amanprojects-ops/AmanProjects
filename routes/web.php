@@ -9,6 +9,8 @@ Route::middleware(MaintenanceMiddleware::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
     Route::get('/blog/{slug}', [HomeController::class, 'blogShow'])->name('blog.show');
+    Route::get('/category/{slug}', [HomeController::class, 'categoryShow'])->name('category.show');
+    Route::get('/project/{slug}', [HomeController::class, 'projectShow'])->name('project.show');
     Route::post('/contact', [HomeController::class, 'contact'])->name('contact.store');
 });
 

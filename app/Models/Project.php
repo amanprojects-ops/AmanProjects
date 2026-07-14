@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
@@ -15,6 +14,7 @@ class Project extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'tech_stack_tags',
         'github_link',
@@ -23,6 +23,15 @@ class Project extends Model
         'featured',
         'status',
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($project) {
+            if (empty($project->slug)) {
+                $project->slug = \Illuminate\Support\Str::slug($project->title);
+            }
+        });
+    }
 
     protected $casts = [
         'featured' => 'boolean',

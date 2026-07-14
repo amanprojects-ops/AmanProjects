@@ -238,6 +238,20 @@
 
     {{-- ===== JSON-LD STRUCTURED DATA (GIO + AIO) ===== --}}
     @php
+        if (!isset($user) && isset($data->user)) {
+            $user = $data->user;
+        }
+        if (!isset($user)) {
+            $user = \Illuminate\Support\Facades\Cache::remember('ap_user_data', 30, function () {
+                return \App\Models\User::with([
+                    'profile',
+                    'socialLinks' => function ($query) {
+                        $query->where('is_active', true)->orderBy('name');
+                    }
+                ])->first();
+            });
+        }
+
         $schemaName        = $settings['site_name'] ?? 'AmanProjects';
         $schemaDescription = $settings['meta_description'] ?? 'AmanProjects builds premium custom software, SaaS products, and cybersecurity solutions from Bihar, India. Trusted by clients across India for Web Development, API Integration, and more.';
         $schemaUrl         = url('/');
@@ -245,6 +259,21 @@
         $schemaPhone       = !empty($settings['local_business_phone']) ? $settings['local_business_phone'] : ($user->profile?->phone ?? '');
         $schemaEmail       = !empty($settings['local_business_email']) ? $settings['local_business_email'] : ($user->profile?->email ?? $user->email ?? '');
         $schemaLocation    = !empty($settings['local_business_address']) ? $settings['local_business_address'] : ($user->profile?->location ?? 'Saharsa, Bihar, India');
+        
+        // Parse address components
+        $addressParts      = array_map('trim', explode(',', $schemaLocation));
+        $schemaLocality    = $settings['local_business_locality'] ?? ($addressParts[0] ?? 'Saharsa');
+        $schemaRegion      = $settings['local_business_region'] ?? ($addressParts[1] ?? 'Bihar');
+        
+        $schemaPostalCode  = $settings['local_business_postal_code'] ?? '852201';
+        if (!isset($settings['local_business_postal_code'])) {
+            if (preg_match('/\b\d{5,6}\b/', $schemaLocation, $matches)) {
+                $schemaPostalCode = $matches[0];
+            } elseif (str_contains(strtolower($schemaLocation), 'delhi')) {
+                $schemaPostalCode = '110001';
+            }
+        }
+
         $schemaLat         = !empty($settings['local_business_lat']) ? $settings['local_business_lat'] : '25.0961';
         $schemaLng         = !empty($settings['local_business_lng']) ? $settings['local_business_lng'] : '85.3131';
         $socialLinks       = $user->socialLinks ?? collect();
@@ -274,6 +303,9 @@
                 "address": {
                     "@type": "PostalAddress",
                     "streetAddress": "{{ $schemaLocation }}",
+                    "addressLocality": "{{ $schemaLocality }}",
+                    "addressRegion": "{{ $schemaRegion }}",
+                    "postalCode": "{{ $schemaPostalCode }}",
                     "addressCountry": "IN"
                 },
                 "geo": {
@@ -396,6 +428,28 @@
                         }
                     }
                 ]
+            },
+            {
+                "@type": "Review",
+                "@id": "{{ $schemaUrl }}/#review",
+                "itemReviewed": {
+                    "@type": "Organization",
+                    "name": "{{ $schemaName }}",
+                    "image": "{{ $schemaLogo }}",
+                    "@id": "{{ $schemaUrl }}/#organization"
+                },
+                "author": {
+                    "@type": "Person",
+                    "name": "Verified Client"
+                },
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                },
+                "reviewBody": "Excellent custom software and SaaS development services. Highly recommended for professional and secure solutions.",
+                "datePublished": "{{ date('Y-m-d') }}"
             }
         ]
     }

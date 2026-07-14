@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\AlbumImage;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Project;
 use App\Models\Setting;
-use App\Models\AlbumImage;
+use Illuminate\Http\Request;
 
 class SitemapController extends Controller
 {

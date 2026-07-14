@@ -239,7 +239,7 @@
                     @if($post->categories->count())
                         <div class="post-cats">
                             @foreach($post->categories as $cat)
-                                <span class="post-cat-badge">{{ $cat->name }}</span>
+                                <a href="{{ route('category.show', $cat->slug) }}" class="post-cat-badge">{{ $cat->name }}</a>
                             @endforeach
                         </div>
                     @endif

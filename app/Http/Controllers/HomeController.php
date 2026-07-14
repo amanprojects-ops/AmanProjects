@@ -68,6 +68,37 @@ class HomeController extends Controller
         return view('blog.show', compact('post', 'settings'));
     }
 
+    public function categoryShow(string $slug): View
+    {
+        $category = \App\Models\Category::where('slug', $slug)->firstOrFail();
+
+        $posts = Post::with('categories')
+            ->whereHas('categories', function ($query) use ($category) {
+                $query->where('categories.id', $category->id);
+            })
+            ->where('status', 'published')
+            ->latest('published_at')
+            ->paginate(10);
+
+        $settings = $this->getSettings();
+
+        return view('blog.index', compact('posts', 'settings', 'category'));
+    }
+
+    public function projectShow(string $slug): View
+    {
+        $project = Project::with(['albums' => function($query) {
+                $query->where('is_active', true)->orderBy('sort_order');
+            }, 'albums.images'])
+            ->where('slug', $slug)
+            ->where('status', 'published')
+            ->firstOrFail();
+
+        $settings = $this->getSettings();
+
+        return view('project.show', compact('project', 'settings'));
+    }
+
     // =========================================================================
     // CONTACT
     // =========================================================================

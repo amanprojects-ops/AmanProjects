@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Blog — ' . ($settings['site_title'] ?? 'Portfolio'))
-@section('meta_description', 'Read our latest articles, tutorials, and insights on software development, technology, and more.')
+@section('title', isset($category) ? $category->name . ' Articles — ' . ($settings['site_title'] ?? 'AmanProjects') : 'Blog — ' . ($settings['site_title'] ?? 'AmanProjects'))
+@section('meta_description', isset($category) ? 'Read our latest articles, tutorials, and insights on ' . $category->name . '.' : 'Read our latest articles, tutorials, and insights on software development, technology, and more.')
 
 @push('styles')
 <style>
@@ -187,13 +187,21 @@
 <section class="blog-hero">
     <div class="container">
         <div class="blog-hero-badge" data-aos="fade-down">
-            <i class="fa-solid fa-pen-nib"></i> Blog & Articles
+            <i class="fa-solid fa-pen-nib"></i> @if(isset($category)) Category: {{ $category->name }} @else Blog & Articles @endif
         </div>
         <h1 data-aos="fade-up" data-aos-delay="50">
-            Thoughts &amp; <span>Insights</span>
+            @if(isset($category))
+                {{ $category->name }} <span>Articles</span>
+            @else
+                Thoughts &amp; <span>Insights</span>
+            @endif
         </h1>
         <p data-aos="fade-up" data-aos-delay="100">
-            Deep dives into software development, technology trends, and building digital products.
+            @if(isset($category))
+                Browse all articles published under the "{{ $category->name }}" category.
+            @else
+                Deep dives into software development, technology trends, and building digital products.
+            @endif
         </p>
     </div>
 </section>
@@ -222,9 +230,9 @@
                         @endif
 
                         @if($post->categories->first())
-                            <span class="blog-card-badge">
+                            <a href="{{ route('category.show', $post->categories->first()->slug) }}" class="blog-card-badge">
                                 {{ $post->categories->first()->name }}
-                            </span>
+                            </a>
                         @endif
                     </div>
 
