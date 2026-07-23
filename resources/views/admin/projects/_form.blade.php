@@ -16,8 +16,15 @@
                 </div>
 
                 <div>
+                    <label for="slug" class="form-label-custom">Slug</label>
+                    <input type="text" name="slug" id="slug" value="{{ old('slug', $project->slug ?? '') }}"
+                        class="form-control-custom" placeholder="project-url-slug">
+                    @error('slug')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
                     <label for="description" class="form-label-custom">Description</label>
-                    <textarea name="description" id="description" rows="5"
+                    <textarea name="description" id="description" rows="8"
                         class="form-control-custom" style="resize:vertical;" placeholder="Describe the project…">{{ old('description', $project->description ?? '') }}</textarea>
                     @error('description')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
@@ -126,6 +133,58 @@
     }
 </style>
 
+@push('styles')
+    <!-- Summernote Lite CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <style>
+        .note-editor.note-frame {
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            overflow: hidden;
+            box-shadow: none !important;
+        }
+        .note-toolbar {
+            background: #f8fafc !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 8px 10px !important;
+        }
+        .note-btn-group {
+            margin-right: 6px !important;
+        }
+        .note-btn {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            color: #334155 !important;
+            padding: 5px 10px !important;
+            font-size: 13px !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+        }
+        .note-btn:hover, .note-btn.active {
+            background: #6366f1 !important;
+            color: #ffffff !important;
+            border-color: #6366f1 !important;
+        }
+        .note-dropdown-menu {
+            border-radius: 10px !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .note-editable {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 14.5px !important;
+            line-height: 1.6 !important;
+            color: #0f172a !important;
+            background: #ffffff !important;
+            min-height: 250px;
+        }
+        .note-statusbar {
+            background: #f8fafc !important;
+            border-top: 1px solid #e2e8f0 !important;
+        }
+    </style>
+@endpush
+
 <script>
     function previewImage(event) {
         const input = event.target;
@@ -154,3 +213,53 @@
         }
     }
 </script>
+
+@push('scripts')
+    <!-- jQuery & Summernote Lite JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Slug Auto Generator
+            function generateSlug(text) {
+                return text
+                    .toString()
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^\w\s-]/g, '')     // Remove non-alphanumeric chars
+                    .replace(/[\s_-]+/g, '-')     // Replace spaces/underscores with -
+                    .replace(/^-+|-+$/g, '');     // Trim -
+            }
+
+            let isSlugManuallyEdited = {{ (isset($project) && $project->slug) ? 'true' : 'false' }};
+
+            $('#slug').on('input', function() {
+                isSlugManuallyEdited = $(this).val().trim().length > 0;
+            });
+
+            $('#title').on('input keyup change', function() {
+                if (!isSlugManuallyEdited) {
+                    $('#slug').val(generateSlug($(this).val()));
+                }
+            });
+
+            // Summernote Editor
+            $('#description').summernote({
+                placeholder: 'Describe the project...',
+                tabsize: 2,
+                height: 280,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video', 'hr']],
+                    ['view', ['fullscreen', 'codeview']]
+                ]
+            });
+        });
+    </script>
+@endpush

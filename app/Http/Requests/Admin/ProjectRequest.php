@@ -15,6 +15,7 @@ class ProjectRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:10000',
             'tech_stack_tags' => 'nullable|string|max:500',
             'github_link' => 'nullable|url|max:500',
