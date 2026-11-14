@@ -66,6 +66,12 @@
                 Leads &amp; Opportunities
             </a>
         </div>
+        <div class="nav-item">
+            <a href="{{ route('admin.api-tokens.index') }}" class="{{ request()->routeIs('admin.api-tokens.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-key"></i></span>
+                API Tokens
+            </a>
+        </div>
 
         <div class="nav-section-label">Communication</div>
 

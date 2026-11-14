@@ -15,6 +15,9 @@
             <span class="badge bg-indigo-subtle text-indigo px-3 py-2 rounded-pill fw-semibold">
                 <i class="fa-solid fa-cloud-arrow-down me-1"></i> Extension API Active
             </span>
+            <a href="{{ route('admin.api-tokens.index') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px; font-weight: 600;">
+                <i class="fa-solid fa-key me-1"></i> API Tokens
+            </a>
         </div>
     </div>
 

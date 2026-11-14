@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\Admin\ProcessStepController;
 use App\Http\Controllers\Admin\HeroSettingController;
+use App\Http\Controllers\Admin\ApiTokenController;
 use App\Http\Controllers\Admin\LeadAdminController;
 use App\Http\Controllers\Admin\ServicesSettingController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,11 @@ Route::post('/leads/{id}/analyze', [LeadAdminController::class, 'analyze'])->nam
 Route::post('/leads/{id}/proposals', [LeadAdminController::class, 'storeProposal'])->name('leads.proposals.store');
 Route::post('/leads/{id}/proposals/{proposal}/approve', [LeadAdminController::class, 'approveProposal'])->name('leads.proposals.approve');
 Route::delete('/leads/{id}', [LeadAdminController::class, 'destroy'])->name('leads.destroy');
+
+// API Tokens Management for LeadHarvest Extension & External Clients
+Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+Route::delete('/api-tokens/{id}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
 
 Route::middleware('role:super-admin,admin')->group(function () {
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
