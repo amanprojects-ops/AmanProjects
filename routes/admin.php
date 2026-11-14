@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use App\Http\Controllers\Admin\ProcessStepController;
 use App\Http\Controllers\Admin\HeroSettingController;
+use App\Http\Controllers\Admin\LeadAdminController;
 use App\Http\Controllers\Admin\ServicesSettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,14 @@ Route::resource('process-steps', ProcessStepController::class)->except('show');
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contacts.show');
 Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');
+
+// Lead Management & Opportunity Acquisition Routes (Rule 2, 12, 14)
+Route::get('/leads', [LeadAdminController::class, 'index'])->name('leads.index');
+Route::get('/leads/{id}', [LeadAdminController::class, 'show'])->name('leads.show');
+Route::post('/leads/{id}/analyze', [LeadAdminController::class, 'analyze'])->name('leads.analyze');
+Route::post('/leads/{id}/proposals', [LeadAdminController::class, 'storeProposal'])->name('leads.proposals.store');
+Route::post('/leads/{id}/proposals/{proposal}/approve', [LeadAdminController::class, 'approveProposal'])->name('leads.proposals.approve');
+Route::delete('/leads/{id}', [LeadAdminController::class, 'destroy'])->name('leads.destroy');
 
 Route::middleware('role:super-admin,admin')->group(function () {
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');

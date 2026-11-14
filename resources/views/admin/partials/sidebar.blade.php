@@ -58,6 +58,15 @@
             </a>
         </div>
 
+        <div class="nav-section-label">Prospecting &amp; Growth</div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.leads.index') }}" class="{{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fa-solid fa-crosshairs"></i></span>
+                Leads &amp; Opportunities
+            </a>
+        </div>
+
         <div class="nav-section-label">Communication</div>
 
         <div class="nav-item">
